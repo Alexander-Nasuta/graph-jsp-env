@@ -12,8 +12,12 @@ build==0.9.0
     # via pip-tools
 bumpver==2022.1120
     # via graph-jsp-env (pyproject.toml)
+cachetools==5.2.0
+    # via tox
 certifi==2022.12.7
     # via requests
+chardet==5.1.0
+    # via tox
 charset-normalizer==2.1.1
     # via requests
 click==8.1.3
@@ -22,11 +26,19 @@ click==8.1.3
     #   bumpver
     #   pip-tools
 colorama==0.4.6
-    # via bumpver
+    # via
+    #   bumpver
+    #   tox
 coverage[toml]==6.5.0
     # via pytest-cov
+distlib==0.3.6
+    # via virtualenv
 exceptiongroup==1.0.4
     # via pytest
+filelock==3.8.2
+    # via
+    #   tox
+    #   virtualenv
 flake8==6.0.0
     # via graph-jsp-env (pyproject.toml)
 idna==3.4
@@ -48,7 +60,9 @@ mypy-extensions==0.4.3
 packaging==21.3
     # via
     #   build
+    #   pyproject-api
     #   pytest
+    #   tox
 pathlib2==2.3.7.post1
     # via bumpver
 pathspec==0.10.2
@@ -58,15 +72,22 @@ pep517==0.13.0
 pip-tools==6.11.0
     # via graph-jsp-env (pyproject.toml)
 platformdirs==2.6.0
-    # via black
+    # via
+    #   black
+    #   tox
+    #   virtualenv
 pluggy==1.0.0
-    # via pytest
+    # via
+    #   pytest
+    #   tox
 pycodestyle==2.10.0
     # via flake8
 pyflakes==3.0.1
     # via flake8
 pyparsing==3.0.9
     # via packaging
+pyproject-api==1.2.1
+    # via tox
 pytest==7.2.0
     # via
     #   graph-jsp-env (pyproject.toml)
@@ -85,13 +106,19 @@ tomli==2.0.1
     #   build
     #   coverage
     #   mypy
+    #   pyproject-api
     #   pytest
+    #   tox
+tox==4.0.0
+    # via graph-jsp-env (pyproject.toml)
 typing-extensions==4.4.0
     # via
     #   black
     #   mypy
 urllib3==1.26.13
     # via requests
+virtualenv==20.17.1
+    # via tox
 wheel==0.38.4
     # via pip-tools
 
