@@ -37,7 +37,7 @@ flake8==6.0.0
     # via graph-jsp-env (pyproject.toml)
 fonttools==4.38.0
     # via matplotlib
-gym==0.21.0
+gym==0.21
     # via
     #   graph-jsp-env (pyproject.toml)
     #   stable-baselines3

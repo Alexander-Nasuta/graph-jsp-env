@@ -37,6 +37,113 @@ The environment offers multiple visualisation options, some of which are shown b
   </a>
 </div>
 
+Github: https://github.com/Alexander-Nasuta/graph-jsp-env
+
+PyPi: https://pypi.org/project/graph-jsp-env/
+
+## Quick Start
+
+### Install the Package 
+install the package with pip:
+```
+   right click on the 'resources' -> 'Mark directory as' -> `Resource Root`
+```
+### Minimal Working Example
+the code below shows a minimal working example without any reinforcement learning 
+```
+from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
+import numpy as np
+
+jsp = np.array([
+    [
+        [0, 1, 2, 3],  # job 0
+        [0, 2, 1, 3]  # job 1
+    ],
+    [
+        [11, 3, 3, 12],  # task durations of job 0
+        [5, 16, 7, 4]  # task durations of job 1
+    ]
+
+])
+env = DisjunctiveGraphJspEnv(jps_instance=jsp)
+
+# loop over all actions
+for i in range(env.total_tasks_without_dummies):
+    _ = env.step(i)
+    env.render()
+# schedule is done when every action/node is scheduled
+env.render(wait=None)  # with wait=None the window remains open till a button is pressed
+```
+
+### Manual Scheduling
+
+I recommend to do the schedule process manually once, before letting reinforcement agents do the work.
+To do so first install `inquirer`. This package will handle your input, that you will select in the console.
+
+```
+pip install inquirer
+```
+
+Then run the following code:
+```
+import inquirer
+import numpy as np
+
+from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
+from graph_jsp_env.disjunctive_graph_logger import log
+
+jsp = np.array([
+    [
+        [0, 1, 2, 3],  # job 0 (engineer’s hammer)
+        [0, 2, 1, 3],  # job 1  (Nine Man Morris)
+    ],
+    [
+        [11, 3, 3, 12],  # task durations of job 0
+        [5, 16, 7, 4],  # task durations of job 1
+    ]
+
+])
+
+env = DisjunctiveGraphJspEnv(
+    jps_instance=jsp,
+    scaling_divisor=40.0  # makespan of the optimal solution for this instance
+)
+
+done = False
+log.info("each task/node corresponds to an action")
+
+while not done:
+    env.render(
+        show=["gantt_console", "gantt_window", "graph_console", "graph_window"],
+        # ,stack='vertically'
+    )
+    questions = [
+        inquirer.List(
+            "task",
+            message="Which task should be scheduled next?",
+            choices=[
+                (f"Task {task_id}", task_id)
+                for task_id, bol in enumerate(env.valid_action_mask(), start=1)
+                if bol
+            ],
+        ),
+    ]
+    action = inquirer.prompt(questions)["task"] - 1  # note task are index 1 in the viz, but index 0 in action space
+    n_state, reward, done, info = env.step(action)
+    # note: gantt_window and graph_window use a lot of resources
+
+log.info(f"the JSP is completely scheduled.")
+log.info(f"makespan: {info['makespan']}")
+log.info("press any key to close the window (while the window is focused).")
+# env.render(wait=None)  # wait for keyboard input before closing the render window
+env.render(
+    wait=None,
+    show=["gantt_console", "graph_console", "graph_window"],
+    # stack='vertically'
+)
+```
+
+
 ### Project Structure
 This project is still in development and will have some significant changes before version 1.0.0.
 This project ist structured according to [James Murphy's testing guide](https://www.youtube.com/watch?v=DhUpxWjOhME).
