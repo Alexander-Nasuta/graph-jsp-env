@@ -23,7 +23,7 @@ dependencies = [
     "matplotlib>=3",
     "numpy>=1.22",
     "pandas>=1.4",
-    "kaleido>=0.2",
+    "kaleido",
     "gym>=0.21.0"
 ]
 requires-python = ">=3.9"
