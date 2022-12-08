@@ -117,7 +117,7 @@ To run this Project locally on your machine follow the following steps:
 
 1. Clone the repo
    ```sh
-   git clone todo
+   git clone https://github.com/Alexander-Nasuta/graph-jsp-env.git
    ```
 2. Install the python requirements_dev packages. `requirements_dev.txt` includes all the packages of
 specified `requirements.txt` and some additional development packages like `mypy`, `pytext`, `tox` etc. 
