@@ -1,3 +1,7 @@
+import os
+
+import pytest
+
 from graph_jsp_env.disjunctive_graph_jsp_visualizer import DisjunctiveGraphJspVisualizer
 
 
@@ -17,6 +21,7 @@ def test_terminal_gantt_vis(visualisation_dataframe):
     )
 
 
+@pytest.mark.skipif(os.getenv("GITHUB_ACTIONS") == "true", reason="no gui")
 def test_window_gantt_vis(visualisation_dataframe):
     import numpy as np
     import matplotlib.pyplot as plt
