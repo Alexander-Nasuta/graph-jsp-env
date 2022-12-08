@@ -108,7 +108,7 @@ afterwards your project folder should be colored in the following way:
 
 <div align="center">
   <a>
-    <img src="./resources/readme_images/mark_project_folders.png" height="180">
+    <img src="./resources/readme_images/mark_project_folders.png" height="240">
   </a>
 </div>
 
@@ -119,7 +119,7 @@ Run (drop down) | Edit Configurations... | Configuration | ☑️ Emulate termin
 
 <div align="center">
   <a>
-    <img src="./resources/readme_images/colored_logs_settings.png"  height="280">
+    <img src="./resources/readme_images/colored_logs_settings.png"  height="320">
   </a>
 </div>
 ### Usage
