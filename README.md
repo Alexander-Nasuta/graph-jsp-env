@@ -5,7 +5,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a>
     <img src="./resources/readme_images/logo.png" alt="Logo" height="80">
   </a>
 
@@ -16,15 +16,31 @@
 </div>
 
 
+<div align="center">
+  <a>
+    <img src="./resources/readme_images/graph_jsp_tikz.png" alt="Logo" height="180">
+  </a>
+</div>
+
 
 ## About The Project
 This provides an implementation [OpenAi Gym Environment](https://gym.openai.com/) 
 of the Job Shop Scheduling Problem (JSP) using the disjunctive graph approach.
+The environment offers multiple visualisation options, some of which are shown below 
 
-![Enviorment Screenshot][screenshot]
+<div align="center">
+  <a>
+    <img src="./resources/readme_images/ganttAndGraph.png" alt="Logo" height="200">
+  </a>
+  <a>
+    <img src="./resources/readme_images/console.png" alt="Logo" height="200">
+  </a>
+</div>
 
 ### Project Structure
-This project ist structured according to [James Murphy's testing guide](https://www.youtube.com/watch?v=DhUpxWjOhME)
+This project is still in development and will have some significant changes before version 1.0.0.
+This project ist structured according to [James Murphy's testing guide](https://www.youtube.com/watch?v=DhUpxWjOhME).
+
 
 ### Built With
 
