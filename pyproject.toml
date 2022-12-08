@@ -16,7 +16,7 @@ classifiers = [
 ]
 keywords = []
 dependencies = [
-    "requests >= 2",
+    "rich >= 12",
 ]
 requires-python = ">=3.9"
 
@@ -27,7 +27,7 @@ dev = ["black", "bumpver", "isort", "pip-tools", "pytest", "pytest-cov","mypy", 
 Homepage = "https://github.com/Alexander-Nasuta/pypitemplate"
 
 [tool.pytest.ini_options]
-addopts = "--cov=phantomderopfa -p no:warnings"
+addopts = "--cov=graph_jsp_env -p no:warnings"
 testpaths = [
     "tests",
 ]
