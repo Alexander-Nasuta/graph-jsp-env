@@ -104,10 +104,24 @@ This section goes over a few recommended step for setting up the Project properl
    right click on the 'tests' -> 'Mark directory as' -> `Test Source Root`
 ```
 
+afterwards your project folder should be colored in the following way:
+
+<div align="center">
+  <a>
+    <img src="./resources/readme_images/mark_project_folders.png" height="180">
+  </a>
+</div>
+
 4. (optional) When running a script enable `Emulate terminal in output console`
 ```
 Run (drop down) | Edit Configurations... | Configuration | ☑️ Emulate terminal in output console
 ```
+
+<div align="center">
+  <a>
+    <img src="./resources/readme_images/colored_logs_settings.png"  height="280">
+  </a>
+</div>
 ### Usage
 
 
