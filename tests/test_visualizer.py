@@ -1,5 +1,3 @@
-import os
-
 import pytest
 
 from graph_jsp_env.disjunctive_graph_jsp_visualizer import DisjunctiveGraphJspVisualizer

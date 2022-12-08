@@ -17,6 +17,10 @@ click==8.1.3
     #   black
     #   bumpver
     #   pip-tools
+cloudpickle==2.2.0
+    # via
+    #   gym
+    #   stable-baselines3
 colorama==0.4.6
     # via bumpver
 commonmark==0.9.1
@@ -33,6 +37,12 @@ flake8==6.0.0
     # via graph-jsp-env (pyproject.toml)
 fonttools==4.38.0
     # via matplotlib
+gym==0.21.0
+    # via
+    #   graph-jsp-env (pyproject.toml)
+    #   stable-baselines3
+importlib-metadata==4.13.0
+    # via stable-baselines3
 iniconfig==1.1.1
     # via pytest
 isort==5.10.1
@@ -44,7 +54,9 @@ kiwisolver==1.4.4
 lexid==2021.1006
     # via bumpver
 matplotlib==3.6.2
-    # via graph-jsp-env (pyproject.toml)
+    # via
+    #   graph-jsp-env (pyproject.toml)
+    #   stable-baselines3
 mccabe==0.7.0
     # via flake8
 mypy==0.991
@@ -59,9 +71,11 @@ numpy==1.23.5
     # via
     #   contourpy
     #   graph-jsp-env (pyproject.toml)
+    #   gym
     #   matplotlib
     #   opencv-python
     #   pandas
+    #   stable-baselines3
 opencv-python==4.6.0.66
     # via graph-jsp-env (pyproject.toml)
 packaging==21.3
@@ -70,7 +84,9 @@ packaging==21.3
     #   matplotlib
     #   pytest
 pandas==1.5.2
-    # via graph-jsp-env (pyproject.toml)
+    # via
+    #   graph-jsp-env (pyproject.toml)
+    #   stable-baselines3
 pathlib2==2.3.7.post1
     # via bumpver
 pathspec==0.10.2
@@ -115,6 +131,8 @@ six==1.16.0
     # via
     #   pathlib2
     #   python-dateutil
+stable-baselines3==1.6.2
+    # via graph-jsp-env (pyproject.toml)
 tenacity==8.1.0
     # via plotly
 toml==0.10.2
@@ -126,12 +144,17 @@ tomli==2.0.1
     #   coverage
     #   mypy
     #   pytest
+torch==1.13.0
+    # via stable-baselines3
 typing-extensions==4.4.0
     # via
     #   black
     #   mypy
+    #   torch
 wheel==0.38.4
     # via pip-tools
+zipp==3.11.0
+    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
