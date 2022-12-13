@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://cybernetics-lab.de/">
-    <img src="./resources/readme_images/logo.png" alt="Logo" height="80">
+    <img src="https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/logo.png" alt="Logo" height="80">
   </a>
 
   <h1 align="center">
@@ -14,7 +14,7 @@
   </h1>
 
    <a>
-    <img src="./resources/readme_images/graph_jsp_tikz.png" alt="Logo" height="180">
+    <img src="https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/graph_jsp_tikz.png" alt="Logo" height="180">
   </a>
 
 </div>
@@ -28,8 +28,8 @@ of the Job Shop Scheduling Problem (JSP) using the disjunctive graph approach.
 The environment offers multiple visualisation options, some of which are shown below 
 
 
-![](./resources/readme_images/ganttAndGraph.png)
-![](./resources/readme_images/console.png)
+![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/ganttAndGraph.png)
+![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/console.png)
 
 Github: https://github.com/Alexander-Nasuta/graph-jsp-env
 
@@ -144,8 +144,8 @@ It needs a while before the first console Outputs appear.
 This demonstrator is essentially the manual Scheduling above with the [ft06](http://jobshop.jjvh.nl/instance.php?instance_id=6)
 JSP instance.
 
-![](./resources/readme_images/demo_window.png)
-![](./resources/readme_images/demo_console.png)
+![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/demo_window.png)
+![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/demo_console.png)
 
 
 # Project Structure
@@ -269,7 +269,7 @@ afterwards your project folder should be colored in the following way:
 
 <div align="center">
   <a>
-    <img src="./resources/readme_images/mark_project_folders.png"  height="320">
+    <img src="https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/mark_project_folders.png"  height="320">
   </a>
 </div>
 
@@ -278,7 +278,7 @@ afterwards your project folder should be colored in the following way:
 Run (drop down) | Edit Configurations... | Configuration | ☑️ Emulate terminal in output console
 ```
 
-![](./resources/readme_images/colored_logs_settings.png)
+![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/colored_logs_settings.png)
 
 
 
