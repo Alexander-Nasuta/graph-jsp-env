@@ -5,48 +5,42 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a>
+  <a href="https://cybernetics-lab.de/">
     <img src="./resources/readme_images/logo.png" alt="Logo" height="80">
   </a>
 
-  <h3 align="center">
+  <h1 align="center">
      Graph Job Shop Problem Gym Environment 
-  </h3>
+  </h1>
 
-</div>
-
-
-<div align="center">
-  <a>
+   <a>
     <img src="./resources/readme_images/graph_jsp_tikz.png" alt="Logo" height="180">
   </a>
+
 </div>
 
 
-## About The Project
+
+
+# About The Project
 This provides an implementation [OpenAi Gym Environment](https://gym.openai.com/) 
 of the Job Shop Scheduling Problem (JSP) using the disjunctive graph approach.
 The environment offers multiple visualisation options, some of which are shown below 
 
-<div align="center">
-  <a>
-    <img src="./resources/readme_images/ganttAndGraph.png" alt="Logo" height="200">
-  </a>
-  <a>
-    <img src="./resources/readme_images/console.png" alt="Logo" height="200">
-  </a>
-</div>
+
+![](./resources/readme_images/ganttAndGraph.png)
+![](./resources/readme_images/console.png)
 
 Github: https://github.com/Alexander-Nasuta/graph-jsp-env
 
 PyPi: https://pypi.org/project/graph-jsp-env/
 
-## Quick Start
+# Quick Start
 
 ### Install the Package 
-install the package with pip:
+Install the package with pip:
 ```
-   right click on the 'resources' -> 'Mark directory as' -> `Resource Root`
+   pip install graph-jsp-env
 ```
 ### Minimal Working Example
 the code below shows a minimal working example without any reinforcement learning 
@@ -94,8 +88,8 @@ from graph_jsp_env.disjunctive_graph_logger import log
 
 jsp = np.array([
     [
-        [0, 1, 2, 3],  # job 0 (engineer’s hammer)
-        [0, 2, 1, 3],  # job 1  (Nine Man Morris)
+        [0, 1, 2, 3],  # job 0
+        [0, 2, 1, 3],  # job 1
     ],
     [
         [11, 3, 3, 12],  # task durations of job 0
@@ -143,22 +137,82 @@ env.render(
 )
 ```
 
+# Demonstrator (windows executable)
 
-### Project Structure
+A windows .exe-demonstrator is available on [sciebo](https://rwth-aachen.sciebo.de/s/UqUx4XntTpk2uMQ). 
+It needs a while before the first console Outputs appear.
+This demonstrator is essentially the manual Scheduling above with the [ft06](http://jobshop.jjvh.nl/instance.php?instance_id=6)
+JSP instance.
+
+![](./resources/readme_images/demo_window.png)
+![](./resources/readme_images/demo_console.png)
+
+
+# Project Structure
 This project is still in development and will have some significant changes before version 1.0.0.
-This project ist structured according to [James Murphy's testing guide](https://www.youtube.com/watch?v=DhUpxWjOhME).
+This project ist structured according to [James Murphy's testing guide](https://www.youtube.com/watch?v=DhUpxWjOhME) and 
+this [PyPi-publishing-guide](https://realpython.com/pypi-publish-python-package/).
 
+# Getting Started
 
-### Built With
+If you just want to use the environment, then only the Usage section is relevant for you.
+If you want to further develop the environment the follow the instructions in the Development section.
 
-This project uses (among others) the following libraries
+## Usage
 
-* [OpenAI Gym](https://gym.openai.com/)
-<!-- todo: Add all major libs-->
+Install the package with pip:
+```
+   pip install graph-jsp-env
+```
 
-## Getting Started
+TODO: present all major features of the env with ray, stb3
 
-In this Section describes the used Setup and Development tools.
+## Development 
+
+To run this Project locally on your machine follow the following steps:
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/Alexander-Nasuta/graph-jsp-env.git
+   ```
+2. Install the python requirements_dev packages. `requirements_dev.txt` includes all the packages of
+specified `requirements.txt` and some additional development packages like `mypy`, `pytext`, `tox` etc. 
+    ```sh
+   pip install -r requirements_dev.txt
+   ```
+3. Install the modules of the project locally. For more info have a look at 
+[James Murphy's testing guide](https://www.youtube.com/watch?v=DhUpxWjOhME)
+   ```sh
+   pip install -e .
+   ```
+
+### Testing
+
+For testing make sure that the dev dependencies are installed (`requirements_dev.txt`) and the models of this 
+project are set up (i.e. you have run `pip install -e .`).  
+
+Then you should be able to run
+
+```sh
+mypy src
+```
+
+```sh
+flake8 src
+```
+
+```sh
+pytest
+```
+
+or everthing at once using `tox`.
+
+```sh
+tox
+```
+
+In this Section describes the used Setup and Development tools. 
+This only relevant if you plan on further develop
 
 ### Hardware
 
@@ -215,7 +269,7 @@ afterwards your project folder should be colored in the following way:
 
 <div align="center">
   <a>
-    <img src="./resources/readme_images/mark_project_folders.png" height="240">
+    <img src="./resources/readme_images/mark_project_folders.png"  height="320">
   </a>
 </div>
 
@@ -224,62 +278,11 @@ afterwards your project folder should be colored in the following way:
 Run (drop down) | Edit Configurations... | Configuration | ☑️ Emulate terminal in output console
 ```
 
-<div align="center">
-  <a>
-    <img src="./resources/readme_images/colored_logs_settings.png"  height="320">
-  </a>
-</div>
-### Usage
+![](./resources/readme_images/colored_logs_settings.png)
 
 
-### Development 
 
-To run this Project locally on your machine follow the following steps:
-
-1. Clone the repo
-   ```sh
-   git clone https://github.com/Alexander-Nasuta/graph-jsp-env.git
-   ```
-2. Install the python requirements_dev packages. `requirements_dev.txt` includes all the packages of
-specified `requirements.txt` and some additional development packages like `mypy`, `pytext`, `tox` etc. 
-    ```sh
-   pip install -r requirements_dev.txt
-   ```
-3. Install the modules of the project locally. For more info have a look at 
-[James Murphy's testing guide](https://www.youtube.com/watch?v=DhUpxWjOhME)
-   ```sh
-   pip install -e .
-   ```
-
-## Testing
-
-For testing make sure that the dev dependencies are installed (`requirements_dev.txt`) and the models of this 
-project are set up (i.e. you have run `pip install -e .`).  
-
-Then you should be able to run
-
-```sh
-mypy src
-```
-
-```sh
-flake8 src
-```
-
-```sh
-pytest
-```
-
-or everthing at once using `tox`.
-
-```sh
-tox
-```
-
-## PyPi 
-This [guide](https://realpython.com/pypi-publish-python-package/) was used for the PypPi publishing process.
-
-## License
+# License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
