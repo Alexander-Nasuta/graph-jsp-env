@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from collections import OrderedDict
-from typing import List, Union
+from typing import List, Union, Dict, Callable
 
 from graph_jsp_env.disjunctive_graph_jsp_visualizer import DisjunctiveGraphJspVisualizer
 from graph_jsp_env.disjunctive_graph_logger import log
@@ -55,8 +55,9 @@ class DisjunctiveGraphJspEnv(gym.Env):
     def __init__(self,
                  jps_instance: np.ndarray = None, *,
                  # parameters for reward
-                 scaling_divisor: float = None,
-                 scale_reward: bool = True,
+                 reward_function='nasuta',
+                 custom_reward_function: Callable = None,
+                 reward_function_parameters: Dict = None,
                  # parameters for observation
                  normalize_observation_space: bool = True,
                  flat_observation_space: bool = True,
@@ -145,12 +146,45 @@ class DisjunctiveGraphJspEnv(gym.Env):
         self.longest_processing_time = None
         self.observation_space_shape = None
         self.scaling_divisor = None
-        self.horizon = None
         self.machine_colors = None
         self.G = None
         self.machine_routes = None
+        self.makespan_previous_step = None
 
-        self.scale_reward = scale_reward
+        # reward function settings
+        if reward_function not in ['nasuta', 'zhang', 'graph-tassel', 'samsonov', 'zero', 'custom']:
+            raise ValueError(f"only 'nasuta', 'zhang', 'graph-tassel', 'samsonov', 'zero', 'custom' "
+                             f"are valid arguments for 'reward_function'. {reward_function} is not.")
+        if reward_function == 'custom' and custom_reward_function is None:
+            raise ValueError(f"if 'reward_function' is 'custom', 'custom_reward_function' must be specified.")
+
+        self.reward_function = reward_function
+        self.custom_reward_function = custom_reward_function
+
+        # default reward function params
+        if reward_function_parameters is None:
+            if reward_function == 'nasuta':
+                self.reward_function_parameters = {
+                    'scaling_divisor': 1.0
+                }
+            elif reward_function == 'zhang':
+                self.reward_function_parameters = {}
+            elif reward_function == 'samsonov':
+                self.reward_function_parameters = {
+                    'gamma': 1.025,
+                    't_opt': None,
+                }
+            elif reward_function == 'graph-tassel':
+                self.reward_function_parameters = {
+                }
+            elif reward_function == 'zero':
+                self.reward_function_parameters = {}
+            elif reward_function == 'custom':
+                self.reward_function_parameters = {}
+            else:
+                raise ValueError('something went wrong. This error should not be called.')
+        else:
+            self.reward_function_parameters = reward_function_parameters
 
         # observation settings
         self.normalize_observation_space = normalize_observation_space
@@ -185,16 +219,16 @@ class DisjunctiveGraphJspEnv(gym.Env):
         self.verbose = verbose
 
         if jps_instance is not None:
-            self.load_instance(jsp_instance=jps_instance, scaling_divisor=scaling_divisor)
+            self.load_instance(jsp_instance=jps_instance)
 
-    def load_instance(self, jsp_instance: np.ndarray, *, scaling_divisor: float = None) -> None:
+    def load_instance(self, jsp_instance: np.ndarray, *, reward_function_parameters: Dict = None) -> None:
         """
         This loads a jsp instance, sets up the corresponding graph and sets the attributes accordingly.
 
-        :param jsp_instance:        a jsp instance as numpy array
-        :param scaling_divisor:     a lower bound of the makespan of jsp instance or some
+        :param jsp_instance:                a jsp instance as numpy array
+        :param reward_function_parameters:  if specified, the reward functions params will be updated.
 
-        :return:                    None
+        :return:                            None
         """
         _, n_jobs, n_machines = jsp_instance.shape
         self.size = (n_jobs, n_machines)
@@ -240,20 +274,6 @@ class DisjunctiveGraphJspEnv(gym.Env):
             })
         else:
             raise NotImplementedError(f"'{self.env_transform}' is not supported.")
-
-        if self.scale_reward and scaling_divisor:
-            self.scaling_divisor = scaling_divisor
-        elif self.scale_reward and not scaling_divisor:
-            if self.verbose > 0:
-                log.warning(
-                    "defaulting scaling_divisor to an naive lower bound. You might consider setting 'scaling_divisor'"
-                    " to a lower bound calculated by a suitable heuristic or Google Or tools for better performance.")
-            self.scaling_divisor = np.sum(jsp_instance[1], axis=1).min()  # shortest job
-
-        # naive upper bound
-        # may be useful for wrappers
-        # the term 'horizon' is inspired by the Google OR Tools terminology
-        self.horizon = jsp_instance[1].max() * n_machines * n_jobs
 
         # generate colors for machines
         c_map = plt.cm.get_cmap(self.c_map)  # select the desired cmap
@@ -346,6 +366,15 @@ class DisjunctiveGraphJspEnv(gym.Env):
                 weight=self.G.nodes[task_id]['duration']
             )
 
+        initial_makespan = nx.dag_longest_path_length(self.G)
+        self.makespan_previous_step = initial_makespan
+
+        if reward_function_parameters is not None:
+            if self.verbose > 1:
+                log.info(f"updating reward_function_parameters from '{self.reward_function_parameters}' "
+                         f"to '{reward_function_parameters}'")
+            self.reward_function_parameters = reward_function_parameters
+
     def step(self, action: int) -> (np.ndarray, float, bool, dict):
         """
         perform an action on the environment. Not valid actions will have no effect.
@@ -388,9 +417,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
         min_length = min([len(route) for m_id, route in self.machine_routes.items()])
         done = min_length == self.n_jobs
 
-        # reward is always 0.0 expect if the jps is scheduled completely
-        reward = 0.0
-
+        makespan = nx.dag_longest_path_length(self.G)
         if done:
             try:
                 # by construction a cycle should never happen
@@ -400,19 +427,82 @@ class DisjunctiveGraphJspEnv(gym.Env):
                 raise RuntimeError(f"CYCLE DETECTED cycle: {cycle}")
             except nx.exception.NetworkXNoCycle:
                 pass
-
-            makespan = nx.dag_longest_path_length(self.G)
-            reward = - makespan / self.scaling_divisor if self.scale_reward else - makespan
-
             info["makespan"] = makespan
             info["gantt_df"] = self.network_as_dataframe()
             if self.verbose > 0:
-                log.info(f"makespan: {makespan}, return: {reward:.2f}")
-
-        info["scaling_divisor"] = self.scaling_divisor
+                log.info(f"makespan: {makespan}")
 
         state = self._state_array()
+        reward = self.get_reward(
+            state=state,
+            done=done,
+            info=info,
+            makespan_this_step=makespan
+        )
+        self.makespan_previous_step = makespan
         return state, reward, done, info
+
+    def get_reward(self, state: np.ndarray, done: bool, info: Dict, makespan_this_step: float):
+        info['reward_function'] = self.reward_function
+        reward_function_parameters = self.reward_function_parameters
+
+        if self.reward_function == 'nasuta':
+            if not done:
+                return 0.0
+            else:
+                return - makespan_this_step / reward_function_parameters['scaling_divisor']
+
+        elif self.reward_function == 'zhang':
+            return 1.0 * self.makespan_previous_step - makespan_this_step  # 1.0 to convert to float
+
+        elif self.reward_function == 'graph-tassel':
+            # this implementation is not equal to the orginal tassel implementation, because in the disjunctive graph
+            # approach a timestep does not correspond to a step in time but rather a step in the scheduling process.
+            # However this code uses tassels idea to use the machine utilization or the scheduled area in the gant
+            # chart.
+            max_finish_time = 0.0
+            total_filled_area = 0.0
+            at_least_one_scheduled_node = False
+            for m, m_route in self.machine_routes.items():
+                if len(m_route):
+                    m_ft = self.G.nodes[m_route[-1]]["finish_time"]
+                    if m_ft >= max_finish_time:
+                        max_finish_time = m_ft
+                    m_filled_area = sum([self.G.nodes[task]["duration"] for task in m_route])
+                    total_filled_area += m_filled_area
+                    at_least_one_scheduled_node = True
+                else:
+                    pass
+            if not at_least_one_scheduled_node:  # needed to avoid division through zero after invalid first action
+                return 0.0
+            total_gantt_area = max_finish_time * self.n_machines
+            machine_utilization = total_filled_area / total_gantt_area  # always between 0 and 1
+            return machine_utilization
+
+        elif self.reward_function == 'samsonov':
+            if not done:
+                return 0.0
+            else:
+                gamma = reward_function_parameters['gamma']
+                if reward_function_parameters['t_opt'] is None:
+                    raise ValueError(f"'t_opt' must be provided inside 'reward_function_parameters' for the samsonov "
+                                     f"reward function.")
+                t_opt = reward_function_parameters['t_opt']
+                return 1000 * gamma ** t_opt / gamma ** makespan_this_step
+
+        elif self.reward_function == 'zero':
+            return 0.0
+
+        elif self.reward_function == 'custom':
+            return self.custom_reward_function(
+                state,  # numpy array
+                done,  # boolean done flag
+                info,  # info dict
+                self.G,  # networkX directed graph
+                makespan_this_step,  # longest path in G before the current timestep action
+                self.makespan_previous_step,  # longest path in G before the current timestep action
+                **reward_function_parameters  # custom reward function parameters
+            )
 
     def reset(self):
         """
