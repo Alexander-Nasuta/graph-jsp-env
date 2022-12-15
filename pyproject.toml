@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "graph-jsp-env"
-version = "0.0.3"
+version = "0.1.0"
 description = "todo"
 readme = "README.md"
 authors = [{ name = "Alexander Nasuta", email = "alexander.nasuta@ima.rwth-aachen.de" }]
@@ -75,7 +75,7 @@ no_implicit_reexport = true
 # push = true
 
 [tool.bumpver]
-current_version = "0.0.1"
+current_version = "0.1.0"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message  = "Bump version {old_version} -> {new_version}"
 commit          = true
