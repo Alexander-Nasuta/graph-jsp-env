@@ -19,7 +19,7 @@ dependencies = [
     "rich",
     "opencv-python",
     "plotly",
-    "networkx",
+    "networkx>=3",
     "matplotlib",
     "numpy",
     "pandas",
@@ -83,9 +83,11 @@ tag             = true
 push            = false
 
 
+
 [tool.bumpver.file_patterns]
 "pyproject.toml" = [
     'current_version = "{version}"',
+    'version = "{version}"'
 ]
 "setup.py" = [
     "{version}",
