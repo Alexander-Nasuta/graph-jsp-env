@@ -24,7 +24,7 @@ dependencies = [
     "numpy",
     "pandas",
     "kaleido",
-    "gym"
+    "gym[classic_control]"
 ]
 requires-python = ">=3.9"
 
