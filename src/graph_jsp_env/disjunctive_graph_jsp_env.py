@@ -969,7 +969,8 @@ class DisjunctiveGraphJspEnv(gym.Env):
                 if self.verbose >= 1:
                     log.warning("no action options remaining")
                 if not self.env_transform == 'mask':
-                    raise RuntimeError("something went wrong")  # todo: remove error?
+                    log.warning("no action options remaining")
+                    # raise RuntimeError("something went wrong")
             return mask
         elif action_mode == 'job':
             task_mask = self.valid_action_mask(action_mode='task')
