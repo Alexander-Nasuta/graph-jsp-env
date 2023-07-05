@@ -14,7 +14,7 @@ cycler==0.11.0
     # via matplotlib
 fonttools==4.38.0
     # via matplotlib
-gym[classic_control]==0.26.2
+gym==0.26.2
     # via graph-jsp-env (pyproject.toml)
 gym-notices==0.0.8
     # via gym
@@ -46,8 +46,6 @@ pillow==9.3.0
     # via matplotlib
 plotly==5.11.0
     # via graph-jsp-env (pyproject.toml)
-pygame==2.1.0
-    # via gym
 pygments==2.13.0
     # via rich
 pyparsing==3.0.9
