@@ -23,6 +23,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install tox tox-gh-actions
     - name: upgrade setuptools
-      run: pip install -upgrade setuptools
+      run: pip3 install --upgrade pip setuptools
     - name: Test with tox
       run: tox
