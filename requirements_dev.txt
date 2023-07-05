@@ -4,16 +4,32 @@
 #
 #    pip-compile --extra=dev --output-file=requirements_dev.txt pyproject.toml
 #
+absl-py==1.4.0
+    # via tensorboard
+ale-py==0.7.4
+    # via stable-baselines3
 attrs==22.1.0
     # via pytest
+autorom[accept-rom-license]==0.4.2
+    # via stable-baselines3
+autorom-accept-rom-license==0.6.1
+    # via autorom
 black==22.10.0
     # via graph-jsp-env (pyproject.toml)
 build==0.9.0
     # via pip-tools
 bumpver==2022.1120
     # via graph-jsp-env (pyproject.toml)
+cachetools==5.3.1
+    # via google-auth
+certifi==2023.5.7
+    # via requests
+charset-normalizer==3.1.0
+    # via requests
 click==8.1.3
     # via
+    #   autorom
+    #   autorom-accept-rom-license
     #   black
     #   bumpver
     #   pip-tools
@@ -37,12 +53,27 @@ flake8==6.0.0
     # via graph-jsp-env (pyproject.toml)
 fonttools==4.38.0
     # via matplotlib
+google-auth==2.21.0
+    # via
+    #   google-auth-oauthlib
+    #   tensorboard
+google-auth-oauthlib==1.0.0
+    # via tensorboard
+grpcio==1.56.0
+    # via tensorboard
 gym==0.21
     # via
     #   graph-jsp-env (pyproject.toml)
     #   stable-baselines3
+idna==3.4
+    # via requests
 importlib-metadata==4.13.0
-    # via stable-baselines3
+    # via
+    #   ale-py
+    #   markdown
+    #   stable-baselines3
+importlib-resources==5.12.0
+    # via ale-py
 iniconfig==1.1.1
     # via pytest
 isort==5.10.1
@@ -53,6 +84,10 @@ kiwisolver==1.4.4
     # via matplotlib
 lexid==2021.1006
     # via bumpver
+markdown==3.4.3
+    # via tensorboard
+markupsafe==2.1.3
+    # via werkzeug
 matplotlib==3.6.2
     # via
     #   graph-jsp-env (pyproject.toml)
@@ -69,6 +104,7 @@ networkx==3.0
     # via graph-jsp-env (pyproject.toml)
 numpy==1.23.5
     # via
+    #   ale-py
     #   contourpy
     #   graph-jsp-env (pyproject.toml)
     #   gym
@@ -76,8 +112,13 @@ numpy==1.23.5
     #   opencv-python
     #   pandas
     #   stable-baselines3
+    #   tensorboard
+oauthlib==3.2.2
+    # via requests-oauthlib
 opencv-python==4.6.0.66
-    # via graph-jsp-env (pyproject.toml)
+    # via
+    #   graph-jsp-env (pyproject.toml)
+    #   stable-baselines3
 packaging==21.3
     # via
     #   build
@@ -94,7 +135,9 @@ pathspec==0.10.2
 pep517==0.13.0
     # via build
 pillow==9.3.0
-    # via matplotlib
+    # via
+    #   matplotlib
+    #   stable-baselines3
 pip-tools==6.11.0
     # via graph-jsp-env (pyproject.toml)
 platformdirs==2.6.0
@@ -103,6 +146,16 @@ plotly==5.11.0
     # via graph-jsp-env (pyproject.toml)
 pluggy==1.0.0
     # via pytest
+protobuf==4.23.3
+    # via tensorboard
+psutil==5.9.5
+    # via stable-baselines3
+pyasn1==0.5.0
+    # via
+    #   pyasn1-modules
+    #   rsa
+pyasn1-modules==0.3.0
+    # via google-auth
 pycodestyle==2.10.0
     # via flake8
 pyflakes==3.0.1
@@ -125,16 +178,33 @@ python-dateutil==2.8.2
     #   pandas
 pytz==2022.6
     # via pandas
+requests==2.31.0
+    # via
+    #   autorom
+    #   autorom-accept-rom-license
+    #   requests-oauthlib
+    #   tensorboard
+requests-oauthlib==1.3.1
+    # via google-auth-oauthlib
 rich==12.6.0
-    # via graph-jsp-env (pyproject.toml)
+    # via
+    #   graph-jsp-env (pyproject.toml)
+    #   stable-baselines3
+rsa==4.9
+    # via google-auth
 six==1.16.0
     # via
+    #   google-auth
     #   pathlib2
     #   python-dateutil
-stable-baselines3==1.6.2
+stable-baselines3[extra]==1.6.2
     # via graph-jsp-env (pyproject.toml)
 tenacity==8.1.0
     # via plotly
+tensorboard==2.13.0
+    # via stable-baselines3
+tensorboard-data-server==0.7.1
+    # via tensorboard
 toml==0.10.2
     # via bumpver
 tomli==2.0.1
@@ -143,18 +213,33 @@ tomli==2.0.1
     #   build
     #   coverage
     #   mypy
+    #   pep517
     #   pytest
 torch==1.13.0
     # via stable-baselines3
+tqdm==4.65.0
+    # via
+    #   autorom
+    #   stable-baselines3
 typing-extensions==4.4.0
     # via
     #   black
     #   mypy
     #   torch
+urllib3==1.26.16
+    # via
+    #   google-auth
+    #   requests
+werkzeug==2.3.6
+    # via tensorboard
 wheel==0.38.4
-    # via pip-tools
+    # via
+    #   pip-tools
+    #   tensorboard
 zipp==3.11.0
-    # via importlib-metadata
+    # via
+    #   importlib-metadata
+    #   importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip

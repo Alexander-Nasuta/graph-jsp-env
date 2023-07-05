@@ -38,7 +38,7 @@ dev = [
     "pytest-cov",
     "mypy",
     "flake8",
-    "stable_baselines3"
+    "stable_baselines3[extra]"
 ]
 
 [project.urls]
