@@ -1,6 +1,6 @@
 def test_env_constructor():
     from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
-    env_instance = DisjunctiveGraphJspEnv()
+    _ = DisjunctiveGraphJspEnv()
 
 
 def test_with_stable_baselines3_env_checker(custom_jsp_instance):
@@ -68,3 +68,38 @@ def test_trivial_schedule(custom_jsp_instance):
         iteration_count += 1
 
     assert iteration_count == 8
+
+
+def test_reconstruction_after_reset(custom_jsp_instance):
+    import numpy as np
+    from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
+
+    env = DisjunctiveGraphJspEnv(jps_instance=custom_jsp_instance)
+
+    for i in range(int(env.total_tasks_without_dummies / 2)):
+        _ = env.step(i)
+
+    state = env.get_state()
+    action_history = env.get_action_history()
+
+    env.reset()
+
+    for a in action_history:
+        _ = env.step(a)
+
+    reconstructed_state = env.get_state()
+
+    assert np.array_equal(state, reconstructed_state)
+
+
+def test_valid_actions(custom_jsp_instance):
+    from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
+    env = DisjunctiveGraphJspEnv(jps_instance=custom_jsp_instance)
+
+    valid_actions = env.valid_actions()
+    assert valid_actions == {0, 4}
+    for i in range(env.total_tasks_without_dummies):
+        _ = env.step(i)
+
+    valid_actions = env.valid_actions()
+    assert valid_actions == set()

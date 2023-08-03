@@ -8,12 +8,13 @@ import itertools
 import networkx as nx
 import matplotlib as mpl
 import numpy as np
+import numpy.typing as npt
 import pandas as pd
 
 import matplotlib.pyplot as plt
 import plotly.figure_factory as ff
 
-from typing import Union
+from typing import Union, Dict
 
 from graph_jsp_env.disjunctive_graph_logger import log
 
@@ -51,8 +52,9 @@ class DisjunctiveGraphJspVisualizer:
 
         :param format_type:     specifies weather the foreground-color or the background-color shall be adjusted.
                                 valid options: 'foreground','background'
-        :return:
+        :return:                a string that contains the color-codes.
         """
+        # type: ignore # noqa: F401
         if format_type == 'foreground':
             f = '\033[38;2;{};{};{}m'.format  # font rgb format
         elif format_type == 'background':
@@ -91,7 +93,7 @@ class DisjunctiveGraphJspVisualizer:
                f"{DisjunctiveGraphJspVisualizer.COLOR_ESCAPE_SEQUENCE}"
 
     @staticmethod
-    def gantt_chart_console(df: pd.DataFrame, colors: dict) -> None:
+    def gantt_chart_console(df: pd.DataFrame, colors: Dict) -> None:
         """
         console version of the `gantt_chart_rgb_array`-method. prints a gant chart to the console.
         the parameters need to follow the plotly specification.
@@ -165,9 +167,7 @@ class DisjunctiveGraphJspVisualizer:
                 for _, (_, start, finish, resource) in matching_tasks:
                     chart_str = [
                         f"{DisjunctiveGraphJspVisualizer.rgb_color_sequence(*colors[resource])}█"
-                        if not isinstance(v, str)
-                           and start <= v <= finish
-                        else v for v in chart_str
+                        if not isinstance(v, str) and start <= v <= finish else v for v in chart_str
                     ]
                 prefix = f"{f'{j}':<{len_prefix - 1}}║" if j else f"{'':<{len_prefix - 1}}║"
                 colored_block = DisjunctiveGraphJspVisualizer.wrap_with_color_codes("█", *colors[m]) if m else None
@@ -188,7 +188,7 @@ class DisjunctiveGraphJspVisualizer:
         print(gant_str)
 
     @staticmethod
-    def render_rgb_array(vis: np.ndarray, *,
+    def render_rgb_array(vis: npt.NDArray, *,
                          window_title: str = "Job Shop Scheduling", wait: int = 1) -> None:
         """
         renders a rgb-array in an `cv2` window.
@@ -258,7 +258,7 @@ class DisjunctiveGraphJspVisualizer:
         plt.axis("off")
         plt.tight_layout()
 
-        pos: dict = nx.get_node_attributes(G, 'pos')  # node positions
+        pos: Dict = nx.get_node_attributes(G, 'pos')  # node positions
         fig = mpl.pyplot.gcf()
         fig.set_size_inches(self.width, self.height)
 

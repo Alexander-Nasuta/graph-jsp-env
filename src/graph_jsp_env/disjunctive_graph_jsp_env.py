@@ -1,5 +1,6 @@
-import gym
+import gymnasium as gym
 import numpy as np
+import numpy.typing as npt
 import networkx as nx
 import pandas as pd
 
@@ -10,6 +11,8 @@ from typing import List, Union, Dict, Callable
 
 from graph_jsp_env.disjunctive_graph_jsp_visualizer import DisjunctiveGraphJspVisualizer
 from graph_jsp_env.disjunctive_graph_logger import log
+
+from typing import Any, SupportsFloat, Set
 
 
 class DisjunctiveGraphJspEnv(gym.Env):
@@ -53,7 +56,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
     metadata = {'render.modes': ['human', 'rgb_array', 'console']}
 
     def __init__(self,
-                 jps_instance: np.ndarray = None, *,
+                 jps_instance: npt.NDArray = None, *,
                  # parameters for reward
                  reward_function='nasuta',
                  custom_reward_function: Callable = None,
@@ -70,7 +73,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
                  c_map: str = "rainbow",
                  dummy_task_color="tab:gray",
                  default_visualisations: List[str] = None,
-                 visualizer_kwargs: dict = None,
+                 visualizer_kwargs: Dict = None,
                  verbose: int = 0
                  ):
         """
@@ -156,7 +159,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
             raise ValueError(f"only 'nasuta', 'zhang', 'graph-tassel', 'samsonov', 'zero', 'custom' "
                              f"are valid arguments for 'reward_function'. {reward_function} is not.")
         if reward_function == 'custom' and custom_reward_function is None:
-            raise ValueError(f"if 'reward_function' is 'custom', 'custom_reward_function' must be specified.")
+            raise ValueError("if 'reward_function' is 'custom', 'custom_reward_function' must be specified.")
 
         self.reward_function = reward_function
         self.custom_reward_function = custom_reward_function
@@ -218,10 +221,14 @@ class DisjunctiveGraphJspEnv(gym.Env):
 
         self.verbose = verbose
 
+        # save all taken actions into a list
+        # this might be useful for reconstruction the state of the environment after a reset
+        self.action_history = []
+
         if jps_instance is not None:
             self.load_instance(jsp_instance=jps_instance)
 
-    def load_instance(self, jsp_instance: np.ndarray, *, reward_function_parameters: Dict = None) -> None:
+    def load_instance(self, jsp_instance: npt.NDArray, *, reward_function_parameters: Dict = None) -> None:
         """
         This loads a jsp instance, sets up the corresponding graph and sets the attributes accordingly.
 
@@ -375,7 +382,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
                          f"to '{reward_function_parameters}'")
             self.reward_function_parameters = reward_function_parameters
 
-    def step(self, action: int) -> (np.ndarray, float, bool, dict):
+    def step(self, action: int) -> tuple[npt.NDArray, SupportsFloat, bool, bool, Dict[str, Any]]:
         """
         perform an action on the environment. Not valid actions will have no effect.
 
@@ -394,7 +401,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
                 log.info(f"handling action={action} (Task {task_id})")
             info = {
                 **info,
-                **self._schedule_task(task_id=task_id)
+                **self._schedule_task(task_id=task_id, action=action)
             }
         else:  # case for self.action_mode == 'job'
             task_mask = self.valid_action_mask(action_mode='task')
@@ -410,7 +417,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
                     log.info(f"handling job={action} (Task {task_id})")
                 info = {
                     **info,
-                    **self._schedule_task(task_id=task_id)
+                    **self._schedule_task(task_id=task_id, action=action)
                 }
 
         # check if done
@@ -432,7 +439,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
             if self.verbose > 0:
                 log.info(f"makespan: {makespan}")
 
-        state = self._state_array()
+        state = self.get_state()
         reward = self.get_reward(
             state=state,
             done=done,
@@ -440,9 +447,20 @@ class DisjunctiveGraphJspEnv(gym.Env):
             makespan_this_step=makespan
         )
         self.makespan_previous_step = makespan
-        return state, reward, done, info
+        truncated = False  # by construction always false. might by changed by a wrapper
+        return state, reward, done, truncated, info
 
-    def get_reward(self, state: np.ndarray, done: bool, info: Dict, makespan_this_step: float):
+    def is_terminal(self) -> bool:
+        """
+        checks if the current state is terminal.
+        :return: bool flag. Flase -> not terminal, True -> terminal
+        """
+        # check if done
+        min_length = min([len(route) for m_id, route in self.machine_routes.items()])
+        done = min_length == self.n_jobs
+        return done
+
+    def get_reward(self, state: npt.NDArray, done: bool, info: Dict, makespan_this_step: float):
         info['reward_function'] = self.reward_function
         reward_function_parameters = self.reward_function_parameters
 
@@ -485,8 +503,8 @@ class DisjunctiveGraphJspEnv(gym.Env):
             else:
                 gamma = reward_function_parameters['gamma']
                 if reward_function_parameters['t_opt'] is None:
-                    raise ValueError(f"'t_opt' must be provided inside 'reward_function_parameters' for the samsonov "
-                                     f"reward function.")
+                    raise ValueError("'t_opt' must be provided inside 'reward_function_parameters' for the samsonov "
+                                     "reward function.")
                 t_opt = reward_function_parameters['t_opt']
                 return 1000 * gamma ** t_opt / gamma ** makespan_this_step
 
@@ -504,12 +522,19 @@ class DisjunctiveGraphJspEnv(gym.Env):
                 **reward_function_parameters  # custom reward function parameters
             )
 
-    def reset(self):
+    def reset(self, **kwargs) -> tuple[npt.NDArray, Dict[str, Any]]:
         """
         resets the environment and returns the initial state.
-
-        :return: initial state as numpy array.
+        :param **kwargs:   additional keyword arguments for the generic gymnasium reset method.
+        :return:
         """
+        # reset seed
+        super().reset(**kwargs)
+        #
+        info = {
+            "action_history": self.action_history
+        }
+        self.action_history = []  # rest action history
         # remove machine edges/routes
         machine_edges = [(from_, to_) for from_, to_, data_dict in self.G.edges(data=True) if not data_dict["job_edge"]]
         self.G.remove_edges_from(machine_edges)
@@ -524,9 +549,16 @@ class DisjunctiveGraphJspEnv(gym.Env):
             node["start_time"] = None,
             node["finish_time"] = None
 
-        return self._state_array()
+        return self.get_state(), info  # obs, info
 
-    def render(self, mode="human", show: List[str] = None, **render_kwargs) -> Union[None, np.ndarray]:
+    def get_action_history(self) -> List[int]:
+        """
+        returns the action history of the current episode.
+        :return: list of actions
+        """
+        return self.action_history
+
+    def render(self, mode="human", show: List[str] = None, **render_kwargs) -> Union[None, npt.NDArray]:
         """
         renders the enviorment.
 
@@ -598,7 +630,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
             elif mode == "rgb_array":
                 return self.visualizer.gantt_chart_rgb_array(df=df, colors=colors)
 
-    def _schedule_task(self, task_id: int) -> dict:
+    def _schedule_task(self, task_id: int, action: int) -> Dict[str, Any]:
         """
         schedules a task/node in the graph representation if the task can be scheduled.
 
@@ -617,7 +649,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
                 "valid_action": False,
                 "node_id": task_id,
             }
-
+        self.action_history.append(action)
         m_id = node["machine"]
 
         prev_task_in_job_id, _ = list(self.G.in_edges(task_id))[0]
@@ -720,7 +752,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
         else:
             return self._insert_at_index_0(task_id=task_id, node=node, prev_job_node=prev_job_node, m_id=m_id)
 
-    def _append_at_the_end(self, task_id: int, node: dict, prev_job_node: dict, m_id: int) -> dict:
+    def _append_at_the_end(self, task_id: int, node: Dict, prev_job_node: Dict, m_id: int) -> Dict[str, Any]:
         """
         inserts a task at the end (last element) in the `DisjunctiveGraphJssEnv.machine_routes`-dictionary.
 
@@ -753,7 +785,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
             "left_shift": 0,
         }
 
-    def _insert_at_index_0(self, task_id: int, node: dict, prev_job_node: dict, m_id: int) -> dict:
+    def _insert_at_index_0(self, task_id: int, node: Dict, prev_job_node: Dict, m_id: int) -> Dict:
         """
         inserts a task at index 0 (first element) in the `DisjunctiveGraphJssEnv.machine_routes`-dictionary.
 
@@ -779,7 +811,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
             "left_shift": 0,
         }
 
-    def _state_array(self) -> np.ndarray:
+    def get_state(self) -> npt.NDArray:
         """
         returns the state of the environment as numpy array.
 
@@ -938,7 +970,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
 
     def valid_action_mask(self, action_mode: str = None) -> List[bool]:
         """
-        returs that indicates which action in the action space is valid (or will have an effect on the environment) and
+        returns that indicates which action in the action space is valid (or will have an effect on the environment) and
         which one is not.
 
         :param action_mode:     Specifies weather the `action`-argument of the `DisjunctiveGraphJssEnv.step`-method
@@ -978,3 +1010,14 @@ class DisjunctiveGraphJspEnv(gym.Env):
             return [True in job_mask for job_mask in masks_per_job]
         else:
             raise ValueError(f"only 'task' and 'job' are valid arguments for 'action_mode'. {action_mode} is not.")
+
+    def valid_actions(self) -> Set[int]:
+        """
+        Returns the set of valid actions that can be taken in the current state of the environment.
+        The set contains the values one can pass to the step-function.
+        The values depend on the action_mode and the current state of the environment.
+        The set is empty if there are no valid actions.
+
+        :return: set of valid actions
+        """
+        return set(np.where(self.valid_action_mask())[0])
