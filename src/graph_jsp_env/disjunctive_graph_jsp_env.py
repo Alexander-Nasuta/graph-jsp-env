@@ -17,7 +17,7 @@ from typing import Any, SupportsFloat, Set
 
 class DisjunctiveGraphJspEnv(gym.Env):
     """
-    Custom Environment for the Job Shop Problem (jsp) that follows gym interface.
+    Custom Environment for the Job Shop Problem (jsp) that follows gymnasium interface.
 
     This environment is inspired by the
 

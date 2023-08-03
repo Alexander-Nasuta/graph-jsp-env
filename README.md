@@ -1,4 +1,4 @@
-![Tests](https://github.com/mCodingLLC/SlapThatLikeButton-TestingStarterProject/actions/workflows/tests.yml/badge.svg)
+
 
 <div id="top"></div>
 
@@ -23,17 +23,29 @@
 
 
 # About The Project
-This provides an implementation [OpenAi Gym Environment](https://gym.openai.com/) 
+An [Gymnasium Environment](https://gymnasium.farama.org/) implementation 
 of the Job Shop Scheduling Problem (JSP) using the disjunctive graph approach.
-The environment offers multiple visualisation options, some of which are shown below 
-
-
-![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/ganttAndGraph.png)
-![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/console.png)
 
 Github: https://github.com/Alexander-Nasuta/graph-jsp-env
 
 PyPi: https://pypi.org/project/graph-jsp-env/
+
+This environment is inspired by the 
+[The disjunctive graph machine representation of the job shop scheduling problem](https://www.sciencedirect.com/science/article/pii/S0377221799004865)
+by Jacek Błażewicz and
+[Learning to Dispatch for Job Shop Scheduling via Deep Reinforcement Learning](https://proceedings.neurips.cc/paper/2020/file/11958dfee29b6709f48a9ba0387a2431-Paper.pdf)
+by Zhang, Cong, et al.
+
+This environment does not explicitly include disjunctive edges, like specified by Jacek Błażewicz, 
+only conjunctive edges. 
+Additional information is saved in the edges and nodes, such that one could construct the disjunctive edges, so the is no loss in information.
+
+This environment is more similar to the Zhang, Cong, et al. implementation.
+Zhang, Cong, et al. seems to store exclusively time-information exclusively inside nodes 
+(see Figure 2: Example of state transition) and no additional information inside the edges (like weights in the representation of Jacek Błażewicz).
+
+The DisjunctiveGraphJssEnv uses the `networkx` library for graph structure and graph visualization.
+It is highly configurable and offers various rendering options.
 
 # Quick Start
 
@@ -69,89 +81,11 @@ for i in range(env.total_tasks_without_dummies):
 env.render(wait=None)  # with wait=None the window remains open till a button is pressed
 ```
 
-### Manual Scheduling
+### Visualisations
+The environment offers multiple visualisation options, some of which are shown below
 
-I recommend to do the schedule process manually once, before letting reinforcement agents do the work.
-To do so first install `inquirer`. This package will handle your input, that you will select in the console.
-
-```
-pip install inquirer
-```
-
-Then run the following code:
-```
-import inquirer
-import numpy as np
-
-from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
-from graph_jsp_env.disjunctive_graph_logger import log
-
-jsp = np.array([
-    [
-        [0, 1, 2, 3],  # job 0
-        [0, 2, 1, 3],  # job 1
-    ],
-    [
-        [11, 3, 3, 12],  # task durations of job 0
-        [5, 16, 7, 4],  # task durations of job 1
-    ]
-
-])
-
-env = DisjunctiveGraphJspEnv(
-    jps_instance=jsp,
-    scaling_divisor=40.0  # makespan of the optimal solution for this instance
-)
-
-done = False
-log.info("each task/node corresponds to an action")
-
-while not done:
-    env.render(
-        show=["gantt_console", "gantt_window", "graph_console", "graph_window"],
-        # ,stack='vertically'
-    )
-    questions = [
-        inquirer.List(
-            "task",
-            message="Which task should be scheduled next?",
-            choices=[
-                (f"Task {task_id}", task_id)
-                for task_id, bol in enumerate(env.valid_action_mask(), start=1)
-                if bol
-            ],
-        ),
-    ]
-    action = inquirer.prompt(questions)["task"] - 1  # note task are index 1 in the viz, but index 0 in action space
-    n_state, reward, done, info = env.step(action)
-    # note: gantt_window and graph_window use a lot of resources
-
-log.info(f"the JSP is completely scheduled.")
-log.info(f"makespan: {info['makespan']}")
-log.info("press any key to close the window (while the window is focused).")
-# env.render(wait=None)  # wait for keyboard input before closing the render window
-env.render(
-    wait=None,
-    show=["gantt_console", "graph_console", "graph_window"],
-    # stack='vertically'
-)
-```
-
-# Demonstrator (windows executable)
-
-A windows .exe-demonstrator is available on [sciebo](https://rwth-aachen.sciebo.de/s/UqUx4XntTpk2uMQ). 
-It needs a while before the first console Outputs appear.
-This demonstrator is essentially the manual Scheduling above with the [ft06](http://jobshop.jjvh.nl/instance.php?instance_id=6)
-JSP instance.
-
-![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/demo_window.png)
-![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/demo_console.png)
-
-
-# Project Structure
-This project is still in development and will have some significant changes before version 1.0.0.
-This project ist structured according to [James Murphy's testing guide](https://www.youtube.com/watch?v=DhUpxWjOhME) and 
-this [PyPi-publishing-guide](https://realpython.com/pypi-publish-python-package/).
+![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/ganttAndGraph.png)
+![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/console.png)
 
 # Getting Started
 
@@ -160,14 +94,11 @@ If you want to further develop the environment the follow the instructions in th
 
 ## Usage
 
-Install the package with pip:
-```
-   pip install graph-jsp-env
-```
-
-TODO: present all major features of the env with ray, stb3
+Various examples can be found in the [graph-jsp-examples](https://github.com/Alexander-Nasuta/graph-jsp-examples) repo.
 
 ## Development 
+The following sections are only relevant if you plan on further develop the environment and introduce code changes into 
+the environment itself.
 
 To run this Project locally on your machine follow the following steps:
 
@@ -211,36 +142,6 @@ or everthing at once using `tox`.
 tox
 ```
 
-In this Section describes the used Setup and Development tools. 
-This only relevant if you plan on further develop
-
-### Hardware
-
-All the code was developed and tested locally on an Apple M1 Max 16" MacBook Pro (16-inch, 2021) with 64 GB Unified Memory.
-
-The **code** should run perfectly fine on other devices and operating Systems (see Github tests). 
-
-### Python Environment Management
-
-#### Mac
-On a Mac I recommend using [Miniforge](https://github.com/conda-forge/miniforge) instead of more common virtual
-environment solutions like [Anacond](https://www.anaconda.com) or [Conda-Forge](https://conda-forge.org/#page-top).
-
-Accelerate training of machine learning models with TensorFlow on a Mac requires a special installation procedure, 
-that can be found [here](https://developer.apple.com/metal/tensorflow-plugin/).
-However, this repository provides only the gym environment and no concrete reinforcement learning agents.
-Todo: example project with sb3 and rl
-
-
-Setting up Miniforge can be a bit tricky (especially when Anaconda is already installed).
-I found this [guide](https://www.youtube.com/watch?v=w2qlou7n7MA) by Jeff Heaton quite helpful.
-
-#### Windows
-
-On a **Windows** Machine I recommend [Anacond](https://www.anaconda.com), since [Anacond](https://www.anaconda.com) and 
-[Pycharm](https://www.jetbrains.com/de-de/pycharm/) are designed to work well with each 
-other. 
-
 ### IDEA
 
 I recommend to use [Pycharm](https://www.jetbrains.com/de-de/pycharm/).
@@ -279,7 +180,6 @@ Run (drop down) | Edit Configurations... | Configuration | ☑️ Emulate termin
 ```
 
 ![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/colored_logs_settings.png)
-
 
 
 # License
