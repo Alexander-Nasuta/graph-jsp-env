@@ -91,8 +91,10 @@ print(f"makespan: {info['makespan']}")
 ```
 # Stable Baselines3
 To run the example below you need to install the following packages:
-`pip install stable_baselines3`
-`pip install sb3_contrib`
+
+```pip install stable_baselines3```
+
+```pip install sb3_contrib```
 
 It is recommended to use the `MaskablePPO` algorithm from the `sb3_contrib` package.
 
@@ -165,7 +167,7 @@ This visualisation can enabled by setting `render_mode='window'` or setting the 
 ![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/ft06_console.gif)
 
 
-## Usage
+## More Examples
 
 Various examples can be found in the [graph-jsp-examples](https://github.com/Alexander-Nasuta/graph-jsp-examples) repo.
 
