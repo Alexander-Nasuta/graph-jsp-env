@@ -84,8 +84,8 @@ env.render(wait=None)  # with wait=None the window remains open till a button is
 ### Visualisations
 The environment offers multiple visualisation options, some of which are shown below
 
-![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/ganttAndGraph.png)
-![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/console.png)
+![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/ft06_console.gif)
+![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/ft06_window_presi.gif)
 
 # Getting Started
 
