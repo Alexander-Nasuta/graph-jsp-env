@@ -49,15 +49,13 @@ It is highly configurable and offers various rendering options.
 
 # Quick Start
 
-## Install the Package 
 Install the package with pip:
 ```
    pip install graph-jsp-env
 ```
-## Minimal Working Example
-the code below shows a minimal working example without any reinforcement learning 
 
-# Random Actions
+## Minimal Working Example: Random Actions
+The code below shows a minimal working example without any reinforcement learning 
 ```python
 import numpy as np
 from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
