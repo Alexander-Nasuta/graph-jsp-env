@@ -49,48 +49,123 @@ It is highly configurable and offers various rendering options.
 
 # Quick Start
 
-### Install the Package 
+## Install the Package 
 Install the package with pip:
 ```
    pip install graph-jsp-env
 ```
-### Minimal Working Example
+## Minimal Working Example
 the code below shows a minimal working example without any reinforcement learning 
-```
-from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
+
+# Random Actions
+```python
 import numpy as np
+from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
 
 jsp = np.array([
-    [
-        [0, 1, 2, 3],  # job 0
-        [0, 2, 1, 3]  # job 1
-    ],
-    [
-        [11, 3, 3, 12],  # task durations of job 0
-        [5, 16, 7, 4]  # task durations of job 1
-    ]
-
+    [[1, 2, 0],  # job 0
+     [0, 2, 1]],  # job 1
+    [[17, 12, 19],  # task durations of job 0
+     [8, 6, 2]]  # task durations of job 1
 ])
-env = DisjunctiveGraphJspEnv(jps_instance=jsp)
 
-# loop over all actions
-for i in range(env.total_tasks_without_dummies):
-    _ = env.step(i)
-    env.render()
-# schedule is done when every action/node is scheduled
-env.render(wait=None)  # with wait=None the window remains open till a button is pressed
+env = DisjunctiveGraphJspEnv(
+    jps_instance=jsp,
+    perform_left_shift_if_possible=True, 
+    normalize_observation_space=True,  # see documentation of DisjunctiveGraphJspEnv::get_state for more information
+    flat_observation_space=True,  # see documentation of DisjunctiveGraphJspEnv::get_state for more information
+    action_mode='task',  # alternative 'job'
+    dtype='float32'  # dtype of the observation space
+)
+
+terminated = False
+info = {}
+for i in range(6):
+    # get valid action mask. sample expects it to be a numpy array of type int8
+    mask = np.array(env.valid_action_mask()).astype(np.int8)
+    action = env.action_space.sample(mask=mask)
+    state, reward, terminated, truncated, info = env.step(action)
+    # chose the visualisation you want to see using the show parameter
+    # console rendering
+    env.render(show=["gantt_console", "graph_console"])
+    
+print(f"makespan: {info['makespan']}")
+```
+# Stable Baselines3
+To run the example below you need to install the following packages:
+`pip install stable_baselines3`
+`pip install sb3_contrib`
+
+It is recommended to use the `MaskablePPO` algorithm from the `sb3_contrib` package.
+
+```python
+import gymnasium as gym
+import sb3_contrib
+import numpy as np
+import stable_baselines3 as sb3
+from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
+from graph_jsp_env.disjunctive_graph_logger import log
+from sb3_contrib.common.wrappers import ActionMasker
+from sb3_contrib.common.maskable.policies import MaskableActorCriticPolicy
+
+jsp = np.array([
+    [[1, 2, 0],  # job 0
+     [0, 2, 1]],  # job 1
+    [[17, 12, 19],  # task durations of job 0
+     [8, 6, 2]]  # task durations of job 1
+])
+
+env = DisjunctiveGraphJspEnv(
+    jps_instance=jsp,
+    perform_left_shift_if_possible=True,
+    normalize_observation_space=True,
+    flat_observation_space=True,
+    action_mode='task',  # alternative 'job'
+)
+env = sb3.common.monitor.Monitor(env)
+
+
+def mask_fn(env: gym.Env) -> np.ndarray:
+    return env.valid_action_mask()
+
+
+env = ActionMasker(env, mask_fn)
+
+model = sb3_contrib.MaskablePPO(MaskableActorCriticPolicy, env, verbose=1)
+
+# Train the agent
+log.info("training the model")
+model.learn(total_timesteps=10_000)
 ```
 
-### Visualisations
-The environment offers multiple visualisation options, some of which are shown below
 
-![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/ft06_console.gif)
+### Visualisations
+The environment offers multiple visualisation options.
+There are four visualisations that can be mixed and matched:
+- `gantt_window`: a gantt chart visualisation in a separate window
+- `graph_window`: a graph visualisation in a separate window. This visualisation is computationally expensive.
+- `gantt_console`: a gantt chart visualisation in the console
+- `graph_console`: a graph visualisation in the console
+
+The desired visualisation can be defaulted in the constructor of the environment with the argument `default_visualisations`.
+To enable all visualisation specify `default_visualisations=["gantt_window", "gantt_console", "graph_window", "graph_console"]`.
+The default visualisations are the used by the `render()` method if no visualisations are specified (using the `show` argument).
+
+## Visualisation in OpenCV Window
+This visualisation can enabled by setting `render_mode='window'` or setting the argument `default_visualisations=["gantt_window", "graph_window"]` in the constructor of the environment.
+Additional parameters for OpencCV will be passed to the `cv2.imshow()` function.
+Example:
+```python
+env.render(wait=1_000)  # render window closes automatically after 1 seconds
+env.render(wait=None) # render window closes when any button is pressed (when the render window is focused)
+```
+
 ![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/ft06_window_presi.gif)
 
-# Getting Started
+## Console Visualisation 
+This visualisation can enabled by setting `render_mode='window'` or setting the argument `default_visualisations=["gantt_console", "graph_console"]` in the constructor of the environment.
+![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/ft06_console.gif)
 
-If you just want to use the environment, then only the Usage section is relevant for you.
-If you want to further develop the environment the follow the instructions in the Development section.
 
 ## Usage
 
