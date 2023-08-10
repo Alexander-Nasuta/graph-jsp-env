@@ -460,6 +460,15 @@ class DisjunctiveGraphJspEnv(gym.Env):
         done = min_length == self.n_jobs
         return done
 
+    def get_makespan(self) -> float:
+        """
+        returns the makespan in the terminal state.
+        :return:
+        """
+        if not self.is_terminal():
+            raise RuntimeError("cannot get makespan of non-terminal state.")
+        return self.makespan_previous_step
+
     def get_reward(self, state: npt.NDArray, done: bool, info: Dict, makespan_this_step: float):
         info['reward_function'] = self.reward_function
         reward_function_parameters = self.reward_function_parameters

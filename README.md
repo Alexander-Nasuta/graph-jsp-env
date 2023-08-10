@@ -26,9 +26,9 @@
 An [Gymnasium Environment](https://gymnasium.farama.org/) implementation 
 of the Job Shop Scheduling Problem (JSP) using the disjunctive graph approach.
 
-Github: https://github.com/Alexander-Nasuta/graph-jsp-env
+- **Github**: https://github.com/Alexander-Nasuta/graph-jsp-env
 
-PyPi: https://pypi.org/project/graph-jsp-env/
+- **PyPi**: https://pypi.org/project/graph-jsp-env/
 
 This environment is inspired by the 
 [The disjunctive graph machine representation of the job shop scheduling problem](https://www.sciencedirect.com/science/article/pii/S0377221799004865)
