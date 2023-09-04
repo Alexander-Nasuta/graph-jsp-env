@@ -1007,10 +1007,10 @@ class DisjunctiveGraphJspEnv(gym.Env):
                 mask[task_id - 1] = True
 
             if True not in mask:
-                if self.verbose >= 1:
-                    log.warning("no action options remaining")
+                if self.verbose >= 2:
+                    log.debug("no action options remaining")
                 if not self.env_transform == 'mask':
-                    log.warning("no action options remaining")
+                    log.debug("no action options remaining")
                     # raise RuntimeError("something went wrong")
             return mask
         elif action_mode == 'job':

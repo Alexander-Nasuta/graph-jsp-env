@@ -77,13 +77,7 @@ big_banner = f"""
     Disjunctive Graph Job Shop Problem Environment
     {CEND}     
 
-    Version:    {CGREEN}{VERSION}{CEND}
-
-    Developer:  {CBLUE}{CBOLD}Alexander Nasuta{CEND}
-
-    E-mail:     {CBLUE}{CBOLD}alexander.nasuta@ima.rwth-aachen.de{CEND},
-                {CGREY}alexander@nasuta.eu{CEND}
-                
+    Version:    {CGREEN}{VERSION}{CEND}                
 """
 
 small_banner = f"""          
@@ -109,10 +103,4 @@ small_banner = f"""
     {CEND}     
 
     Version:    {CGREEN}{VERSION}{CEND}
-
-    Developer:  {CBLUE}{CBOLD}Alexander Nasuta{CEND}
-
-    E-mail:     {CBLUE}{CBOLD}alexander.nasuta@ima.rwth-aachen.de{CEND},
-                {CGREY}alexander@nasuta.eu{CEND}
-
 """
