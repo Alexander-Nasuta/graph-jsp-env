@@ -23,7 +23,7 @@
 
 
 # About The Project
-An [Gymnasium Environment](https://gymnasium.farama.org/) implementation 
+A [Gymnasium Environment](https://gymnasium.farama.org/) implementation 
 of the Job Shop Scheduling Problem (JSP) using the disjunctive graph approach.
 
 - **Github**: https://github.com/Alexander-Nasuta/graph-jsp-env
