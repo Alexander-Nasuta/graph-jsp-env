@@ -26,10 +26,6 @@ def handler_stop_signals(*_) -> None:
     cv2.destroyAllWindows()
 
 
-signal.signal(signal.SIGINT, handler_stop_signals)
-signal.signal(signal.SIGTERM, handler_stop_signals)
-
-
 class DisjunctiveGraphJspVisualizer:
     """
     this class contains the code for all the different rendering options of a `DisjunctiveGraphJssEnv`,
@@ -213,7 +209,9 @@ class DisjunctiveGraphJspVisualizer:
                  scheduled_color="#DAF7A6", not_scheduled_color="#FFC300", color_job_edge="tab:gray",
                  node_drawing_kwargs=None,
                  edge_drawing_kwargs=None,
-                 critical_path_drawing_kwargs=None):
+                 critical_path_drawing_kwargs=None,
+                 handle_stop_signals=True
+                 ):
         """
         :param dpi:                             parameter for `matplotlib.pyplot.figure`
         :param width:                           parameter for `matplotlib.pyplot.figure`
@@ -245,6 +243,10 @@ class DisjunctiveGraphJspVisualizer:
             "width": 20,
             "alpha": 0.1,
         } if critical_path_drawing_kwargs is None else critical_path_drawing_kwargs
+
+        if handle_stop_signals:
+            signal.signal(signal.SIGINT, handler_stop_signals)
+            signal.signal(signal.SIGTERM, handler_stop_signals)
 
     def graph_rgb_array(self, G: nx.DiGraph) -> np.ndarray:
         """
