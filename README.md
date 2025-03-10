@@ -138,6 +138,49 @@ log.info("training the model")
 model.learn(total_timesteps=10_000)
 ```
 
+# Ray rllib
+
+The following example was provided by [@nhuet](https://github.com/nhuet). 
+To run the example below you need to install the following packages:
+
+```pip install "ray[rllib]" torch "gymnasium[atari,accept-rom-license,mujoco]"```
+
+```python
+import numpy as np
+import ray
+from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
+from ray.rllib.algorithms import PPO
+from ray.tune import register_env
+
+jsp = np.array(
+    [
+        [
+            [0, 1, 2],  # machines for job 0
+            [0, 2, 1],  # machines for job 1
+            [0, 1, 2],  # machines for job 2
+        ],
+        [
+            [3, 2, 2],  # task durations of job 0
+            [2, 1, 4],  # task durations of job 1
+            [0, 4, 3],  # task durations of job 2
+        ],
+    ]
+)
+
+register_env(
+    "jsp",
+    lambda env_config: DisjunctiveGraphJspEnv(
+        jps_instance=jsp,
+        visualizer_kwargs=dict(handle_stop_signals=False)
+    ),
+)
+
+ray.init()
+algo = PPO(config=PPO.get_default_config().environment("jsp"))
+algo.train()
+```
+
+
 
 ### Visualisations
 The environment offers multiple visualisation options.
