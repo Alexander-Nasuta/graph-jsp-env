@@ -1,0 +1,4 @@
+:root {
+    --logo-light: url("_static/logo-light.png");
+    --logo-dark: url("_static/logo-dark.png");
+}
