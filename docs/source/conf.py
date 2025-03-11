@@ -72,6 +72,9 @@ autosectionlabel_maxdepth = 2
 
 # Exclude specific files
 autosectionlabel_exclude_files = ['README.md']
+exclude_patterns = [
+    'README.md'
+]
 
 latex_elements = {
     'papersize': 'a4paper',
@@ -81,3 +84,4 @@ latex_elements = {
 ''',
     'figure_align': 'htbp',
 }
+

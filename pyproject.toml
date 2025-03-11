@@ -46,6 +46,8 @@ dev = [
     "twine",
     "sphinx-copybutton", # for code copy buttons
     "sphinxcontrib-bibtex", # for bibtex support
+    "sphinxcontrib.tikz", # for tikz support
+    "sphinxcontrib-jsmath", # for math support
     "nbsphinx", # for jupyter notebook support in sphinx
     # for examples
     "sb3_contrib",
