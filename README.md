@@ -312,9 +312,6 @@ This project uses `pytest` for testing. To run the tests, run the following comm
 ```shell
 pytest
 ```
-Here is a screenshot of what the output might look like:
-
-![](https://github.com/Alexander-Nasuta/GraphMatrixJobShopEnv/raw/master/resources/pytest-screenshot.png)
 
 For testing with `tox` run the following command:
 
