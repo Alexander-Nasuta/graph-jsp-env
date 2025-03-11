@@ -27,14 +27,14 @@ A [Gymnasium Environment](https://gymnasium.farama.org/) implementation
 of the Job Shop Scheduling Problem (JSP) using the disjunctive graph approach.
 
 - **Github**: https://github.com/Alexander-Nasuta/graph-jsp-env
-
 - **PyPi**: https://pypi.org/project/graph-jsp-env/
+- **Documentation**: https://graph-jsp-env.readthedocs.io/en/latest/
 
 This environment is inspired by the 
 [The disjunctive graph machine representation of the job shop scheduling problem](https://www.sciencedirect.com/science/article/pii/S0377221799004865)
 by Jacek Błażewicz and
 [Learning to Dispatch for Job Shop Scheduling via Deep Reinforcement Learning](https://proceedings.neurips.cc/paper/2020/file/11958dfee29b6709f48a9ba0387a2431-Paper.pdf)
-by Zhang, Cong, et al.
+by Zhang et al.
 
 This environment does not explicitly include disjunctive edges, like specified by Jacek Błażewicz, 
 only conjunctive edges. 
