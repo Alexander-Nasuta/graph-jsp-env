@@ -72,3 +72,12 @@ autosectionlabel_maxdepth = 2
 
 # Exclude specific files
 autosectionlabel_exclude_files = ['README.md']
+
+latex_elements = {
+    'papersize': 'a4paper',
+    'pointsize': '10pt',
+    'preamble': r'''
+\usepackage[utf8]{inputenc}
+''',
+    'figure_align': 'htbp',
+}
