@@ -53,7 +53,8 @@ dev = [
     "sb3_contrib",
     # for converting examples to notebooks
     "jupytext",
-    "notebook"
+    "notebook",
+    "typing_extensions>=4.0.0",
 ]
 
 [project.urls]
