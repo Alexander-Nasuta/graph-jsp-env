@@ -10,5 +10,4 @@
 
 theory/theory
 graph-jsp-env/source-code
-examples/example-gallery
 ```

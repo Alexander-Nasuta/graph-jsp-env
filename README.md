@@ -241,11 +241,11 @@ clone the repository in your favorite code editor (for example PyCharm, VSCode, 
 
 using https:
 ```shell
-git clone https://github.com/Alexander-Nasuta/GraphMatrixJobShopEnv.git
+git clone https://github.com/Alexander-Nasuta/graph-jsp-env
 ```
 or by using the GitHub CLI:
 ```shell
-gh repo clone Alexander-Nasuta/GraphMatrixJobShopEnv
+gh repo clone Alexander-Nasuta/graph-jsp-env
 ```
 
 if you are using PyCharm, I recommend doing the following additional steps:
