@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "graph-jsp-env"
-version = "0.3.3"
+version = "1.0.0"
 description = "A flexible enviorment for job shop scheduling using the disjunctive graph apporach."
 readme = "README.md"
 authors = [{ name = "Alexander Nasuta", email = "alexander.nasuta@ima.rwth-aachen.de" }]
@@ -30,19 +30,32 @@ requires-python = ">=3.9"
 
 [project.optional-dependencies]
 dev = [
-    "black",
     "bumpver",
-    "isort",
     "pip-tools",
     "pytest",
     "pytest-cov",
     "mypy",
     "flake8",
-    "stable_baselines3"
+    "stable_baselines3",
+    "tox",
+    # for docs with sphinx
+    "sphinx",
+    "myst-parser", # .md support for sphinx
+    "sphinx-autobuild",
+    "furo", # cool theme
+    "twine",
+    "sphinx-copybutton", # for code copy buttons
+    "sphinxcontrib-bibtex", # for bibtex support
+    "nbsphinx", # for jupyter notebook support in sphinx
+    # for examples
+    "sb3_contrib",
+    # for converting examples to notebooks
+    "jupytext",
+    "notebook"
 ]
 
 [project.urls]
-Homepage = "https://github.com/Alexander-Nasuta/pypitemplate"
+Homepage = "https://github.com/Alexander-Nasuta/graph-jsp-env"
 
 [tool.pytest.ini_options]
 addopts = "--cov=graph_jsp_env -p no:warnings"

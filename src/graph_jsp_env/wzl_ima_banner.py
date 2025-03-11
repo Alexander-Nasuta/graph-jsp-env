@@ -60,35 +60,34 @@ CVIOLETBG2 = '\33[105m'
 CBEIGEBG2 = '\33[106m'
 CWHITEBG2 = '\33[107m'
 
-
 # noqa: E501, W291
 big_banner = f"""          
 
-     {CEND}{CIMA_BLUE_BG}                      {CEND}{CRWTH_BLUE}                                                 ┃                              {CRWTH_LIGHT_BLUE}                                {CBLUE}
-     {CEND}{CIMA_BLUE_BG}                      {CEND}{CRWTH_BLUE}     ▐███▌         ▟███▛▟███████▛▐███▌           ┃       ▐█▀▜▙█▙   ███████▐█ ▐█ {CRWTH_LIGHT_BLUE}   ▟█▙   ▟█▙  ▟███▐█ ▐█▐█▀▀▐█▙ █{CBLUE}
-     {CEND}{CIMA_BLUE_BG}                      {CEND}{CRWTH_BLUE}     ▐███▌        ▟███▛▟███████▛ ▐███▌           ┃       ▐█▄▟▛▜█▙▟▙██ ▐█  ▐████ {CRWTH_LIGHT_BLUE}  ▟▛ ▜▙ ▟▛ ▜▙ █▍  ▐████▐█▀▀▐██▙█{CBLUE}
-     {CEND}{CIMA_BLUE_BG}  ▐███▐██▙▟██  ▟█▙    {CEND}{CRWTH_BLUE}     ▐███▌ ▟███  ▟███▛    ▟███▛  ▐███▌           ┃       ▐█ ▜▙ ▜█▛▜██ ▐█  ▐█ ▐█ {CRWTH_LIGHT_BLUE} ▟█▛▀▜█▙█▛▀▜█▙▜███▐█ ▐█▐█▆▆▐█ ▜█{CBLUE}
-     {CEND}{CIMA_BLUE_BG}   ▐█ ▐█ ▜▛▐█ ▟█▀█▙   {CEND}{CRWTH_BLUE}     ▐███▌▟████ ▟███▛    ▟███▛   ▐███▌           ┃             {CRWTH_LIGHT_BLUE}▐█  ▐█▐█▙ █▐███▜█▙ ▟███▀▀▐█▀▜▙▟█▀▜█▐███▐█████▙ ▟▛
-     {CEND}{CIMA_BLUE_BG}  ▐███▐█   ▐█▟█▛▀▀█▙  {CEND}{CRWTH_BLUE}     ▐██████▛▐█████▛    ▟████████▐█████████▛     ┃             {CRWTH_LIGHT_BLUE}▐█  ▐█▐██▙█ ▐█  ▜█▄█▛▐█▀▀▐█▄▟▛▜█▆▆▄ ▐█  ▐█  ▜█▄▛ 
-     {CEND}{CIMA_BLUE_BG}                      {CEND}{CRWTH_BLUE}     ▐█████▛ ▐████▛    ▟█████████▐████████▛      ┃             {CRWTH_LIGHT_BLUE} ▜███▛▐█ ▜█▐███  ▜█▛ ▐███▐█ ▜▙▐█▆▆▛▐███ ▐█   ██  
+     {CRWTH_BLUE}                                            ┃                              {CRWTH_LIGHT_BLUE}                                {CBLUE}
+     {CRWTH_BLUE}▐███▌         ▟███▛▟███████▛▐███▌           ┃       ▐█▀▜▙█▙   ███████▐█ ▐█ {CRWTH_LIGHT_BLUE}   ▟█▙   ▟█▙  ▟███▐█ ▐█▐█▀▀▐█▙ █{CBLUE}
+     {CRWTH_BLUE}▐███▌        ▟███▛▟███████▛ ▐███▌           ┃       ▐█▄▟▛▜█▙▟▙██ ▐█  ▐████ {CRWTH_LIGHT_BLUE}  ▟▛ ▜▙ ▟▛ ▜▙ █▍  ▐████▐█▀▀▐██▙█{CBLUE}
+     {CRWTH_BLUE}▐███▌ ▟███  ▟███▛    ▟███▛  ▐███▌           ┃       ▐█ ▜▙ ▜█▛▜██ ▐█  ▐█ ▐█ {CRWTH_LIGHT_BLUE} ▟█▛▀▜█▙█▛▀▜█▙▜███▐█ ▐█▐█▆▆▐█ ▜█{CBLUE}
+     {CRWTH_BLUE}▐███▌▟████ ▟███▛    ▟███▛   ▐███▌           ┃             {CRWTH_LIGHT_BLUE}▐█  ▐█▐█▙ █▐███▜█▙ ▟███▀▀▐█▀▜▙▟█▀▜█▐███▐█████▙ ▟▛
+     {CRWTH_BLUE}▐██████▛▐█████▛    ▟████████▐█████████▛     ┃             {CRWTH_LIGHT_BLUE}▐█  ▐█▐██▙█ ▐█  ▜█▄█▛▐█▀▀▐█▄▟▛▜█▆▆▄ ▐█  ▐█  ▜█▄▛ 
+     {CRWTH_BLUE}▐█████▛ ▐████▛    ▟█████████▐████████▛      ┃             {CRWTH_LIGHT_BLUE} ▜███▛▐█ ▜█▐███  ▜█▛ ▐███▐█ ▜▙▐█▆▆▛▐███ ▐█   ██  
 
 {CEND}
     {CBLUE}{CBOLD}
-    Disjunctive Graph Job Shop Problem Environment
+    Graph Matrix Job Shop Problem Environment
     {CEND}     
 
     Version:    {CGREEN}{VERSION}{CEND}                
 """
 
 small_banner = f"""          
-
-     {B}{CIMA_BLUE_BG}0100100100100000001111{CEND}{CRWTH_BLUE}                                            
-     {B}{CIMA_BLUE_BG}0000110011001000000100{CEND}{CRWTH_BLUE}     ▐███▌         ▟███▛▟███████▛▐███▌      
-     {B}{CIMA_BLUE_BG}1111011011000111100101{CEND}{CRWTH_BLUE}     ▐███▌        ▟███▛▟███████▛ ▐███▌      
-     {B}{CIMA_BLUE_BG}10{W}▐███▐██▙▟██{B}00{W}▟█▙{B}0100{CEND}{CRWTH_BLUE}     ▐███▌ ▟███  ▟███▛    ▟███▛  ▐███▌             
-     {B}{CIMA_BLUE_BG}101{W}▐█{B}1{W}▐█{B}1{W}▜▛▐█{B}0{W}▟█▀█▙{B}001{CEND}{CRWTH_BLUE}     ▐███▌▟████ ▟███▛    ▟███▛   ▐███▌
-     {B}{CIMA_BLUE_BG}00{W}▐███▐█{B}000{W}▐█▟█▛▀▀█▙{B}01{CEND}{CRWTH_BLUE}     ▐██████▛▐█████▛    ▟████████▐█████████▛ 
-     {B}{CIMA_BLUE_BG}0010010010000000111100{CEND}{CRWTH_BLUE}     ▐█████▛ ▐████▛    ▟█████████▐████████▛ 
+{CRWTH_BLUE}
+                                            
+     ▐███▌         ▟███▛▟███████▛▐███▌      
+     ▐███▌        ▟███▛▟███████▛ ▐███▌      
+     ▐███▌ ▟███  ▟███▛    ▟███▛  ▐███▌             
+     ▐███▌▟████ ▟███▛    ▟███▛   ▐███▌
+     ▐██████▛▐█████▛    ▟████████▐█████████▛ 
+     ▐█████▛ ▐████▛    ▟█████████▐████████▛ 
 
 
      {CRWTH_BLUE}▐█▀▜▙█▙   ███████▐█ ▐█ {CRWTH_LIGHT_BLUE}   ▟█▙   ▟█▙  ▟███▐█ ▐█▐█▀▀▐█▙ █{CBLUE}
@@ -99,7 +98,7 @@ small_banner = f"""
            {CRWTH_LIGHT_BLUE} ▜███▛▐█ ▜█▐███  ▜█▛ ▐███▐█ ▜▙▐█▆▆▛▐███ ▐█   ██  
 {CEND}
     {CBLUE}{CBOLD}
-    Disjunctive Graph Job Shop Problem Environment
+    Graph Matrix Job Shop Problem Environment
     {CEND}     
 
     Version:    {CGREEN}{VERSION}{CEND}

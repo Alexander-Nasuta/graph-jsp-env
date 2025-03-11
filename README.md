@@ -102,31 +102,32 @@ It is recommended to use the `MaskablePPO` algorithm from the `sb3_contrib` pack
 import gymnasium as gym
 import sb3_contrib
 import numpy as np
-import stable_baselines3 as sb3
+from stable_baselines3.common.monitor import Monitor
+
 from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
 from graph_jsp_env.disjunctive_graph_logger import log
 from sb3_contrib.common.wrappers import ActionMasker
 from sb3_contrib.common.maskable.policies import MaskableActorCriticPolicy
 
 jsp = np.array([
-    [[1, 2, 0],  # job 0
-     [0, 2, 1]],  # job 1
-    [[17, 12, 19],  # task durations of job 0
-     [8, 6, 2]]  # task durations of job 1
+   [[1, 2, 0],  # job 0
+    [0, 2, 1]],  # job 1
+   [[17, 12, 19],  # task durations of job 0
+    [8, 6, 2]]  # task durations of job 1
 ])
 
 env = DisjunctiveGraphJspEnv(
-    jps_instance=jsp,
-    perform_left_shift_if_possible=True,
-    normalize_observation_space=True,
-    flat_observation_space=True,
-    action_mode='task',  # alternative 'job'
+   jps_instance=jsp,
+   perform_left_shift_if_possible=True,
+   normalize_observation_space=True,
+   flat_observation_space=True,
+   action_mode='task',  # alternative 'job'
 )
-env = sb3.common.monitor.Monitor(env)
+env = Monitor(env)
 
 
 def mask_fn(env: gym.Env) -> np.ndarray:
-    return env.valid_action_mask()
+   return env.unwrapped.valid_action_mask()
 
 
 env = ActionMasker(env, mask_fn)
@@ -214,98 +215,156 @@ This visualisation can enabled by setting `render_mode='window'` or setting the 
 
 Various examples can be found in the [graph-jsp-examples](https://github.com/Alexander-Nasuta/graph-jsp-examples) repo.
 
-## Development 
-The following sections are only relevant if you plan on further develop the environment and introduce code changes into 
-the environment itself.
+## State of the Project
 
-To run this Project locally on your machine follow the following steps:
+This project is complementary material for a research paper.
+It will not be frequently updated.
+Minor updates might occur.
 
-1. Clone the repo
-   ```sh
-   git clone https://github.com/Alexander-Nasuta/graph-jsp-env.git
-   ```
-2. Install the python requirements_dev packages. `requirements_dev.txt` includes all the packages of
-specified `requirements.txt` and some additional development packages like `mypy`, `pytext`, `tox` etc. 
-    ```sh
-   pip install -r requirements_dev.txt
-   ```
-3. Install the modules of the project locally. For more info have a look at 
-[James Murphy's testing guide](https://www.youtube.com/watch?v=DhUpxWjOhME)
-   ```sh
-   pip install -e .
-   ```
+## Dependencies
 
-### Testing
+This project specifies multiple requirements files.
+`requirements.txt` contains the dependencies for the environment to work. These requirements will be installed automatically when installing the environment via `pip`.
+`requirements_dev.txt` contains the dependencies for development purposes. It includes the dependencies for testing, linting, and building the project on top of the dependencies in `requirements.txt`.
 
-For testing make sure that the dev dependencies are installed (`requirements_dev.txt`) and the models of this 
-project are set up (i.e. you have run `pip install -e .`).  
+In this Project the dependencies are specified in the `pyproject.toml` file with as little version constraints as possible.
+The tool `pip-compile` translates the `pyproject.toml` file into a `requirements.txt` file with pinned versions.
+That way version conflicts can be avoided (as much as possible) and the project can be built in a reproducible way.
 
-Then you should be able to run
+## Development Setup
 
-```sh
-mypy src
+If you want to check out the code and implement new features or fix bugs, you can set up the project as follows:
+
+### Clone the Repository
+
+clone the repository in your favorite code editor (for example PyCharm, VSCode, Neovim, etc.)
+
+using https:
+```shell
+git clone https://github.com/Alexander-Nasuta/GraphMatrixJobShopEnv.git
+```
+or by using the GitHub CLI:
+```shell
+gh repo clone Alexander-Nasuta/GraphMatrixJobShopEnv
 ```
 
-```sh
-flake8 src
+if you are using PyCharm, I recommend doing the following additional steps:
+
+- mark the `src` folder as source root (by right-clicking on the folder and selecting `Mark Directory as` -> `Sources Root`)
+- mark the `tests` folder as test root (by right-clicking on the folder and selecting `Mark Directory as` -> `Test Sources Root`)
+- mark the `resources` folder as resources root (by right-clicking on the folder and selecting `Mark Directory as` -> `Resources Root`)
+
+at the end your project structure should look like this:
+
+todo
+
+### Create a Virtual Environment (optional)
+
+Most Developers use a virtual environment to manage the dependencies of their projects.
+I personally use `conda` for this purpose.
+
+When using `conda`, you can create a new environment with the name 'my-graph-jsp-env' following command:
+
+```shell
+conda create -n my-graph-jsp-env python=3.11
 ```
 
-```sh
+Feel free to use any other name for the environment or an more recent version of python.
+Activate the environment with the following command:
+
+```shell
+conda activate my-graph-jsp-env
+```
+
+Replace `my-graph-jsp-env` with the name of your environment, if you used a different name.
+
+You can also use `venv` or `virtualenv` to create a virtual environment. In that case please refer to the respective documentation.
+
+### Install the Dependencies
+
+To install the dependencies for development purposes, run the following command:
+
+```shell
+pip install -r requirements_dev.txt
+pip install tox
+```
+
+The testing package `tox` is not included in the `requirements_dev.txt` file, because it sometimes causes issues when
+using github actions.
+Github Actions uses an own tox environment (namely 'tox-gh-actions'), which can cause conflicts with the tox environment on your local machine.
+
+Reference: [Automated Testing in Python with pytest, tox, and GitHub Actions](https://www.youtube.com/watch?v=DhUpxWjOhME).
+
+### Install the Project in Editable Mode
+
+To install the project in editable mode, run the following command:
+
+```shell
+pip install -e .
+```
+
+This will install the project in editable mode, so you can make changes to the code and test them immediately.
+
+### Run the Tests
+
+This project uses `pytest` for testing. To run the tests, run the following command:
+
+```shell
 pytest
 ```
+Here is a screenshot of what the output might look like:
 
-or everthing at once using `tox`.
+![](https://github.com/Alexander-Nasuta/GraphMatrixJobShopEnv/raw/master/resources/pytest-screenshot.png)
 
-```sh
+For testing with `tox` run the following command:
+
+```shell
 tox
 ```
 
-### IDEA
+Tox will run the tests in a separate environment and will also check if the requirements are installed correctly.
 
-I recommend to use [Pycharm](https://www.jetbrains.com/de-de/pycharm/).
-Of course any code editor can be used instead (like [VS code](https://code.visualstudio.com/) 
-or [Vim](https://github.com/vim/vim)).
+### Building and Publishing the Project to PyPi
 
-This section goes over a few recommended step for setting up the Project properly inside [Pycharm](https://www.jetbrains.com/de-de/pycharm/).
+In order to publish the project to PyPi, the project needs to be built and then uploaded to PyPi.
 
-#### PyCharm Setup
-1. Mark the `src` directory as `Source Root`.
-```
-   right click on the 'src' -> 'Mark directory as' -> `Source Root`
+To build the project, run the following command:
+
+```shell
+python -m build
 ```
 
-2. Mark the `resources` directory as `Resource Root`.
-```
-   right click on the 'resources' -> 'Mark directory as' -> `Resource Root`
-```
+It is considered good practice use the tool `twine` for checking the build and uploading the project to PyPi.
+By default the build command creates a `dist` folder with the built project files.
+To check all the files in the `dist` folder, run the following command:
 
-3. Mark the `tests` directory as `Test Source Root`.
-```
-   right click on the 'tests' -> 'Mark directory as' -> `Test Source Root`
+```shell
+twine check dist/**
 ```
 
-afterwards your project folder should be colored in the following way:
+If the check is successful, you can upload the project to PyPi with the following command:
 
-<div align="center">
-  <a>
-    <img src="https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/mark_project_folders.png"  height="320">
-  </a>
-</div>
-
-4. (optional) When running a script enable `Emulate terminal in output console`
-```
-Run (drop down) | Edit Configurations... | Configuration | ☑️ Emulate terminal in output console
+```shell
+twine upload dist/**
 ```
 
-![](https://github.com/Alexander-Nasuta/graph-jsp-env/raw/master/resources/readme_images/colored_logs_settings.png)
+### Documentation
+This project uses `sphinx` for generating the documentation.
+It also uses a lot of sphinx extensions to make the documentation more readable and interactive.
+For example the extension `myst-parser` is used to enable markdown support in the documentation (instead of the usual .rst-files).
+It also uses the `sphinx-autobuild` extension to automatically rebuild the documentation when changes are made.
+By running the following command, the documentation will be automatically built and served, when changes are made (make sure to run this command in the root directory of the project):
+
+```shell
+sphinx-autobuild ./docs/source/ ./docs/build/html/
+```
+
+This project features most of the extensions featured in this Tutorial: [Document Your Scientific Project With Markdown, Sphinx, and Read the Docs | PyData Global 2021](https://www.youtube.com/watch?v=qRSb299awB0).
 
 
-# License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+## Contact
 
-<!-- MARKDOWN LINKS & IMAGES todo: add Github, Linked in etc.-->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[screenshot]: resources/readme_images/screenshot.png
+If you have any questions or feedback, feel free to contact me via [email](mailto:alexander.nasuta@wzl-iqs.rwth-aachen.de) or open an issue on repository.
 
 

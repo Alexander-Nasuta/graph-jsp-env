@@ -2,3 +2,22 @@
     --logo-light: url("_static/logo-light.png");
     --logo-dark: url("_static/logo-dark.png");
 }
+
+
+/* custom_admonitions.css */
+.admonition.custom-tip {
+    background-color: #e7f4e4;
+    border-left: 4px solid #4caf50;
+    padding: 10px;
+}
+
+.admonition.custom-note {
+    background-color: #e7e4f4;
+    border-left: 4px solid #4caf50;
+    padding: 10px;
+}
+
+p.block-mode {
+    display: block;
+    white-space: pre-wrap;
+}
