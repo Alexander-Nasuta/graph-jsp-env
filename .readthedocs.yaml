@@ -31,4 +31,4 @@ python:
     - requirements: requirements_dev.txt
     - method: pip
       path: .
-    - pip_install: "typing_extensions --upgrade"
+

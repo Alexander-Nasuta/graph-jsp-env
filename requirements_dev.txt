@@ -543,7 +543,7 @@ twine==6.0.1
     # via graph-jsp-env (pyproject.toml)
 types-python-dateutil==2.9.0.20241206
     # via arrow
-typing-extensions==4.4.0
+typing-extensions==4.12.2
     # via
     #   beautifulsoup4
     #   graph-jsp-env (pyproject.toml)

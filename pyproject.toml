@@ -54,7 +54,7 @@ dev = [
     # for converting examples to notebooks
     "jupytext",
     "notebook",
-    "typing_extensions>=4.0.0",
+    "typing_extensions>=4.12.0",
 ]
 
 [project.urls]
