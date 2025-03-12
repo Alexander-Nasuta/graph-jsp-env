@@ -33,4 +33,4 @@ python:
       path: .
     - method: pip
       path: typing_extensions
-      extra_requirements: ["--upgrade"]
+      extra_requirements: ["--upgrade", "--upgrade-strategy", "only-if-needed", "--no-cache-dir"]
