@@ -31,3 +31,6 @@ python:
     - requirements: requirements_dev.txt
     - method: pip
       path: .
+    - method: pip
+      path: typing_extensions
+      extra_requirements: ["--upgrade"]
