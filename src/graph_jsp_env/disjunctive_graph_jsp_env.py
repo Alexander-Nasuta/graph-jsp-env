@@ -58,7 +58,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
     def __init__(self,
                  jps_instance: npt.NDArray = None, *,
                  # parameters for reward
-                 reward_function='nasuta',
+                 reward_function='trivial',
                  custom_reward_function: Callable = None,
                  reward_function_parameters: Dict = None,
                  # parameters for observation
@@ -155,8 +155,8 @@ class DisjunctiveGraphJspEnv(gym.Env):
         self.makespan_previous_step = None
 
         # reward function settings
-        if reward_function not in ['nasuta', 'zhang', 'graph-tassel', 'samsonov', 'zero', 'custom']:
-            raise ValueError(f"only 'nasuta', 'zhang', 'graph-tassel', 'samsonov', 'zero', 'custom' "
+        if reward_function not in ['nasuta', 'zhang', 'graph-tassel', 'samsonov', 'zero', 'custom', 'trivial']:
+            raise ValueError(f"only 'nasuta', 'zhang', 'graph-tassel', 'samsonov', 'zero', 'custom', trivial"
                              f"are valid arguments for 'reward_function'. {reward_function} is not.")
         if reward_function == 'custom' and custom_reward_function is None:
             raise ValueError("if 'reward_function' is 'custom', 'custom_reward_function' must be specified.")
@@ -166,7 +166,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
 
         # default reward function params
         if reward_function_parameters is None:
-            if reward_function == 'nasuta':
+            if reward_function == 'trivial' or reward_function == 'nasuta':
                 self.reward_function_parameters = {
                     'scaling_divisor': 1.0
                 }
@@ -473,7 +473,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
         info['reward_function'] = self.reward_function
         reward_function_parameters = self.reward_function_parameters
 
-        if self.reward_function == 'nasuta':
+        if self.reward_function == 'trivial' or self.reward_function == 'nasuta':
             if not done:
                 return 0.0
             else:
