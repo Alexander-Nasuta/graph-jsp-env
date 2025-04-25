@@ -1,3 +1,8 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15044111.svg)](https://doi.org/10.5281/zenodo.15044111)
+![Python Badge](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff&style=flat)
+[![PyPI version](https://img.shields.io/pypi/v/graph-jsp-env)](https://pypi.org/project/graph-jsp-env/)
+![License](https://img.shields.io/pypi/l/graph-jsp-env)
+[![Documentation Status](https://readthedocs.org/projects/graph-jsp-env/badge/?version=latest)](https://graph-jsp-env.readthedocs.io/en/latest/?badge=latest)
 
 
 <div id="top"></div>
