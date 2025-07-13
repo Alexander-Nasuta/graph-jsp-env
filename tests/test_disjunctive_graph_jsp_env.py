@@ -103,3 +103,31 @@ def test_valid_actions(custom_jsp_instance):
 
     valid_actions = env.valid_actions()
     assert valid_actions == set()
+
+
+
+def test_random_rollout(custom_jsp_instance):
+    from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
+
+    env = DisjunctiveGraphJspEnv(jps_instance=custom_jsp_instance)
+
+    episode_return = env.random_rollout()
+    env.render(mode='console')
+
+    assert env.is_terminal()
+
+
+def test_greedy_machine_utilization_rollout(custom_jsp_instance):
+    from graph_jsp_env.disjunctive_graph_jsp_env import DisjunctiveGraphJspEnv
+
+    env = DisjunctiveGraphJspEnv(
+        jps_instance=custom_jsp_instance,
+        reward_function="nasuta",
+    )
+
+    episode_return = env.greedy_machine_utilization_rollout()
+    env.render(mode='console')
+
+    assert env.is_terminal()
+    assert env.reward_function == "nasuta"
+

@@ -9,7 +9,7 @@
 project = 'graph-jsp-env'
 copyright = '2025, Alexander Nasuta'
 author = 'Alexander Nasuta'
-release = '1.0.1'
+release = '1.0.2'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

@@ -1030,3 +1030,72 @@ class DisjunctiveGraphJspEnv(gym.Env):
         :return: set of valid actions
         """
         return set(np.where(self.valid_action_mask())[0])
+
+    def valid_action_list(self) -> list[int]:
+        """
+        Returns a list of valid actions that can be taken in the current state of the environment.
+        """
+        return [i for i, is_valid in enumerate(self.valid_action_mask()) if is_valid]
+
+    def random_rollout(self) -> float:
+        """
+        performs a random rollout from the current state until a terminal state is reached.
+        """
+        done = self.is_terminal()
+
+        # unfortunately, we don't have any information about the past rewards
+        # so we just return the cumulative reward from the current state onwards
+        cumulative_reward_from_current_state_onwards = 0
+
+        while not done:
+            valid_action_list = self.valid_action_list()
+            random_action = np.random.choice(valid_action_list)
+            _, rew, done, _, _ = self.step(random_action)
+            cumulative_reward_from_current_state_onwards += rew
+
+        return cumulative_reward_from_current_state_onwards
+
+    def greedy_machine_utilization_rollout(self) -> int:
+
+        # store the original reward function
+        original_reward_function = self.reward_function
+
+        self.reward_function = 'graph-tassel'
+
+        def get_best_action():
+            prev_state = self.action_history
+
+            max_utilisation = 0.0
+            best_action = None
+            for action in self.valid_action_list():
+                _, _, done, _, _ = self.step(action)
+
+                # the keyword arguments are primarily used for custom reward functions, so
+                # they are not needed here.
+                utilisation = self.get_reward(
+                    state=_,
+                    done=done,
+                    info=_,
+                    makespan_this_step=_
+                )
+                if utilisation > max_utilisation:
+                    max_utilisation = utilisation
+                    best_action = action
+
+                self.reset()
+                for a in prev_state:
+                    _ = self.step(a)
+            return best_action
+
+        done = self.is_terminal()
+        cumulative_reward_from_current_state_onwards = 0
+        while not done:
+            best_action = get_best_action()
+            _, rew, done, _, _ = self.step(best_action)
+            cumulative_reward_from_current_state_onwards += rew
+
+        # restore the original reward function
+        self.reward_function = original_reward_function
+        return cumulative_reward_from_current_state_onwards
+
+

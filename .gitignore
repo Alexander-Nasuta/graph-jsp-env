@@ -6,6 +6,7 @@ __pycache__/
 main.py
 # C extensions
 *.so
+*.token
 
 # idea
 .idea
