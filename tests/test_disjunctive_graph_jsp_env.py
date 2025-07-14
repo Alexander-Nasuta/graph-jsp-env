@@ -111,7 +111,7 @@ def test_random_rollout(custom_jsp_instance):
 
     env = DisjunctiveGraphJspEnv(jps_instance=custom_jsp_instance)
 
-    episode_return = env.random_rollout()
+    episode_return, info = env.random_rollout()
     env.render(mode='console')
 
     assert env.is_terminal()
@@ -125,7 +125,7 @@ def test_greedy_machine_utilization_rollout(custom_jsp_instance):
         reward_function="nasuta",
     )
 
-    episode_return = env.greedy_machine_utilization_rollout()
+    episode_return, info = env.greedy_machine_utilization_rollout()
     env.render(mode='console')
 
     assert env.is_terminal()

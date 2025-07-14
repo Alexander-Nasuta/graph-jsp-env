@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "graph-jsp-env"
-version = "1.0.2"
+version = "1.1.0"
 description = "A flexible enviorment for job shop scheduling using the disjunctive graph apporach."
 readme = "README.md"
 authors = [{ name = "Alexander Nasuta", email = "alexander.nasuta@ima.rwth-aachen.de" }]

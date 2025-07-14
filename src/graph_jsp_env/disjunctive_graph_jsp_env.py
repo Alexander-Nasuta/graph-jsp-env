@@ -1037,25 +1037,47 @@ class DisjunctiveGraphJspEnv(gym.Env):
         """
         return [i for i, is_valid in enumerate(self.valid_action_mask()) if is_valid]
 
-    def random_rollout(self) -> float:
+    def random_rollout(self) -> (float, dict[str, list]):
         """
         performs a random rollout from the current state until a terminal state is reached.
         """
-        done = self.is_terminal()
+        term = self.is_terminal()
 
         # unfortunately, we don't have any information about the past rewards
         # so we just return the cumulative reward from the current state onwards
         cumulative_reward_from_current_state_onwards = 0
 
-        while not done:
+
+        observations = list()
+        rewards = list()
+        terms = list()
+        truns = list()
+        infos = list()
+
+
+        while not term:
             valid_action_list = self.valid_action_list()
             random_action = np.random.choice(valid_action_list)
-            _, rew, done, _, _ = self.step(random_action)
+            obs, rew, term, trun, info = self.step(random_action)
+
+            observations.append(obs)
+            rewards.append(rew)
+            terms.append(term)
+            truns.append(trun)
+            infos.append(info)
+
             cumulative_reward_from_current_state_onwards += rew
 
-        return cumulative_reward_from_current_state_onwards
+        info = {
+            "observations": observations,
+            "rewards": rewards,
+            "terms": terms,
+            "truns": truns,
+            "infos": infos,
+        }
+        return cumulative_reward_from_current_state_onwards, info
 
-    def greedy_machine_utilization_rollout(self) -> int:
+    def greedy_machine_utilization_rollout(self) -> (int, dict[str, list]):
 
         # store the original reward function
         original_reward_function = self.reward_function
@@ -1087,15 +1109,37 @@ class DisjunctiveGraphJspEnv(gym.Env):
                     _ = self.step(a)
             return best_action
 
-        done = self.is_terminal()
+        term = self.is_terminal()
         cumulative_reward_from_current_state_onwards = 0
-        while not done:
+
+        observations = list()
+        rewards = list()
+        terms = list()
+        truns = list()
+        infos = list()
+
+        while not term:
             best_action = get_best_action()
-            _, rew, done, _, _ = self.step(best_action)
+            obs, rew, term, trun, info = self.step(best_action)
+
+            observations.append(obs)
+            rewards.append(rew)
+            terms.append(term)
+            truns.append(trun)
+            infos.append(info)
+
             cumulative_reward_from_current_state_onwards += rew
+
+        info = {
+            "observations": observations,
+            "rewards": rewards,
+            "terms": terms,
+            "truns": truns,
+            "infos": infos,
+        }
 
         # restore the original reward function
         self.reward_function = original_reward_function
-        return cumulative_reward_from_current_state_onwards
+        return cumulative_reward_from_current_state_onwards, info
 
 
