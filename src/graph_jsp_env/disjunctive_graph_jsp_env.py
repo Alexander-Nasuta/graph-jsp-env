@@ -555,7 +555,7 @@ class DisjunctiveGraphJspEnv(gym.Env):
         for i in range(1, self.total_tasks_without_dummies + 1):
             node = self.G.nodes[i]
             node["scheduled"] = False
-            node["start_time"] = None,
+            node["start_time"] = None
             node["finish_time"] = None
 
         return self.get_state(), info  # obs, info

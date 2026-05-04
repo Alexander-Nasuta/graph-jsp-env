@@ -114,8 +114,7 @@ class DisjunctiveGraphJspVisualizer:
 
         if len(df) > 0:
             machines = sorted(df['Resource'].unique())
-            jobs = df['Task'].unique()
-            jobs.sort()
+            jobs = sorted(df['Task'].unique())
         else:
             jobs, machines = None, None
 
